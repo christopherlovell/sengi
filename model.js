@@ -28,29 +28,12 @@ async function main(){
         mean.pop();
         coeffs.pop();
 
-        //console.log(wavelength);
-        // console.log(components);
-        // console.log(mean);
-        // console.log(coeffs);
-
         var i = 0;
-        var j = 0;
-        //console.log(coeffs[i,j][0]);
-        //console.log(components[0]);
-
-        //var result = new Array(wavelength.length).fill(0)
-        dotp = components.reduce(function(r,a,k){
-            return a.map(function(elem){return elem*coeffs[i,j][k]}); 
-        });
-
-        //console.log(mean)
-        //console.log(dotp)
+        dotp = math.multiply(coeffs[i], components)
+        spec = math.add(mean, dotp)
         
-        var spec = mean.map(function(elem,k){return elem + dotp[k]})
-        console.log(spec)
 
         // ----- D3 plot
-
         var margin = {top: 10, right: 30, bottom: 30, left: 60},
             width = 460 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
@@ -73,22 +56,15 @@ async function main(){
 	        data.push(obj);
         }
 
-		console.log(data);
-
 		var x = d3.scaleLinear()
 			.domain(d3.extent(data, function(d) { return d.wl; }))
 		    .range([0,width]);
 
-		console.log(x);
-
 		var y = d3.scaleLinear()
-			.domain([0, -10])//d3.max(data, function(d) { return +d.sp; })])
+			.domain([d3.min(data, function(d) { return d.sp; }), 
+                     d3.max(data, function(d) { return +d.sp; })])
 		    .range([height,0]);
 
-		console.log(y)
-
-		//x.domain(data.map(function(d) { return d.wl; }));
-		//y.domain([0, d3.max(data, function(d) { return d.sp; })]);
 		
 		svg.append("g")
 	      .attr("transform", "translate(0," + height + ")")
@@ -107,21 +83,6 @@ async function main(){
             .y(function(d) { return y(d.sp) })
             )
         
-        //var ctx = document.getElementById('myChart');
-        //var myLineChart = new Chart(ctx, {
-        //    type: 'line',
-        //    data: {[20,10],
-        //     //       data: [{
-        //     //           x: [1,2,3,4,5], //wavelength,
-        //     //           y: [2,3,4,5,6] }]//spec}]
-        //     //   }]
-        //    //}]
-        //    //},
-        //    options: {}//showLine: true}
-        //});
-
-
-        // mean + dot(coeffs[i,j], components)
 
         //var t = [ /* Target variable */ ];
         //var x = [ /* X-axis coordinates */ ];

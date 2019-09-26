@@ -1,3 +1,20 @@
+/* CUSTOM */
+
+
+.axis path,
+.axis line {
+  fill: none;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+  stroke-width: 1.5px;
+}
+
+
+/* END CUSTOM */
+
 * {
   box-sizing: border-box;
 }

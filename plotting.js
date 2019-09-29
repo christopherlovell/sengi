@@ -1,0 +1,68 @@
+function render(data){
+
+    xScale.domain(d3.extent(data[0], function(d) { return d.x; }));
+    yScale.domain([d3.min(data[0], function(d) { return d.y; }),
+                   d3.max(data[0], function(d) { return +d.y; })]);
+
+    // create axis
+    var yAxis = d3.axisLeft(yScale);
+    var xAxis = d3.axisBottom(xScale);
+
+
+    // draw the new axis
+    if (svg.selectAll(".y.axis").empty()){
+        svg.append("g")
+            .attr("class","y axis")
+            .call(yAxis);
+    } else {
+        svg.selectAll(".y.axis")
+          .transition().duration(1500)
+          .call(yAxis);
+    };
+
+    if (svg.selectAll(".x.axis").empty()){
+        svg.append("g")
+            .attr("transform","translate(0," + height + ")")
+            .attr("class","x axis")
+            .call(xAxis);
+    }
+
+
+    // draw new lines
+    var lines = svg.selectAll(".line")
+        .data(data)
+    .attr("class","line");
+
+    lines.exit().remove();
+
+    lines.enter()
+        .append("path")
+          .attr("class", "line")
+          .attr("d", line)
+          .style("stroke", color)
+        // Update new data
+        .merge(lines)
+          .transition().duration(duration)
+          .attr("d", line)
+          .style("stroke", color);
+
+
+      // text label for the x axis
+    svg.append("text")
+        .attr("transform",
+              "translate(" + (width/2) + " ," +
+                             (height + margin.top + 20) + ")")
+        .style("text-anchor", "middle")
+        .text("Wavelength (Angstroms)");
+
+    // text label for the y axis
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Flux");
+
+}
+

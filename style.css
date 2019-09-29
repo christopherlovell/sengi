@@ -1,5 +1,10 @@
 /* CUSTOM */
 
+.param_slider {
+    margin-top: 75px;
+    margin-bottom: 75px;
+    margin-right: 50px;
+}
 
 .axis path,
 .axis line {
@@ -12,8 +17,8 @@
   stroke-width: 1.5px;
 }
 
-
 /* END CUSTOM */
+
 
 * {
   box-sizing: border-box;

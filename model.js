@@ -1,25 +1,98 @@
 
-function init_param_selector(div,arr,id){
+
+//function init_param_selector(div,arr,id){
+//
+//    var div = document.querySelector(div);
+//
+//    // remove child nodes
+//    while (div.firstChild) {
+//        div.removeChild(div.firstChild);
+//    }
+//
+//    var frag = document.createDocumentFragment();
+//    var select = document.createElement("select");
+//    select.id=id
+//
+//    arr.forEach(function (item,index) {
+//        select.options.add( new Option(item.toFixed(2),item) );
+//    })
+//    
+//    frag.appendChild(select);
+//    div.appendChild(frag);        
+//}
+
+
+function init_param_slider(div,arr,id){
 
     var div = document.querySelector(div);
 
-    // remove child nodes
-    while (div.firstChild) {
-        div.removeChild(div.firstChild);
-    }
+    min_x = Number(math.min(arr).toFixed(4));
+    max_x = Number(math.max(arr).toFixed(4));
 
-    var frag = document.createDocumentFragment();
-    var select = document.createElement("select");
-    select.id=id
+    noUiSlider.create(div, {
+        start: [1.0],
+        connect: true,
+        range: {
+            'min': min_x,
+            'max': max_x
+        },
+        format: {
+            // 'to' the formatted value. Receives a number.
+            to: function (value) {
+                return value.toFixed(4);
+            },
+            // 'from' the formatted value.
+            // Receives a string, should return a number.
+            from: function (value) {
+                return Number(value).toFixed(4);
+            }
+        },
+        tooltips: [true],
+        pips: {
+            mode: 'range',
+            stepped: true,
+            density: 2,
+            format: {
+                to: function (value) { return value.toFixed(2); },
+                from: function (value) { return Number(value).toFixed(4); }
+            }
+        }
+    });
 
-    arr.forEach(function (item,index) {
-        select.options.add( new Option(item.toFixed(2),item) );
-    })
-    
-    frag.appendChild(select);
-    div.appendChild(frag);        
+    div.noUiSlider.on("change", function(){main(false)});
 }
 
+
+
+function argMin(a){
+    return a.reduce((iMin, x, i, arr) => x < arr[iMin] ? i : iMin, 0);
+}
+//function argMax(a){
+//    return a.reduce((iMax, x, i, arr) => x > arr[iMin] ? i : iMax, 0);
+//}
+
+//function linear_interpolation(x,y,x_arr,y_arr,z_arr){
+//    x_min_idx = argMin(math.abs(math.subtract(x_arr, x)))
+//    x_max_idx = argMax(math.abs(math.subtract(x_arr, x)))
+//    
+//    y_min_idx = argMin(math.abs(math.subtract(y_arr, y)))
+//    y_max_idx = argMax(math.abs(math.subtract(y_arr, y)))
+//
+//    z_idx = x_idx + y_idx*y_arr.length;
+//    
+//    return z_arr[z_idx];
+//}
+
+function fetch_coeff(x_idx,y_idx,y_len,z_arr){
+    return z_arr[x_idx + y_idx*y_len];
+}
+
+function nearest_grid_point(x,y,x_arr,y_arr,z_arr){
+    x_idx = argMin(math.abs(math.subtract(x_arr, x)))
+    y_idx = argMin(math.abs(math.subtract(y_arr, y)))
+
+    return fetch_coeff(x_idx,y_idx,y_arr.length,z_arr);
+}
 
 
 async function main(first=false){
@@ -56,45 +129,80 @@ async function main(first=false){
         coeffs.pop();
         ages.pop();
         metallicities.pop();
-       
-        //console.log(ages);
-        //console.log(metallicities);
 
         // ---- init drop down selectors
         if (first){
-            init_param_selector("#age_container",ages,'age_select');
-            init_param_selector("#Z_container",metallicities,'Z_select');
+            //init_param_selector("#age_container",ages,'age_select');
+            //init_param_selector("#Z_container",metallicities,'Z_select');
+            init_param_slider("#age_slider",ages,'age_slider');
+            init_param_slider("#Z_slider",metallicities,'Z_slider');
         }
-    
-        var e = document.getElementById("age_select");
-        var i = e.selectedIndex;
-        
-        var e = document.getElementById("Z_select");
-        var j = e.selectedIndex;
-        
-        idx = i + j*metallicities.length;
 
-        dotp = math.multiply(coeffs[idx], components);
+        //var e = document.getElementById("age_select");
+        //var i = e.selectedIndex;
+        
+        //var e = document.getElementById("Z_select");
+        //var j = e.selectedIndex;
+        
+        var new_age = parseFloat(document.getElementById("age_slider")
+                .noUiSlider.get());
+
+        var new_Z = parseFloat(document.getElementById("Z_slider")
+                .noUiSlider.get());
+
+        console.log(new_age,new_Z);
+
+        n_coeffs = coeffs[0].length;
+
+        interp_coeffs = new Array(n_coeffs)
+        for (k=0; k<n_coeffs; k++){
+            c_col = coeffs.map(x => x[k]);
+            interp_coeffs[k] = nearest_grid_point(new_age,new_Z,ages,metallicities,c_col)
+        }
+       
+        console.log(interp_coeffs);
+
+        dotp = math.multiply(interp_coeffs, components);
         spec = math.add(mean, dotp);
+
+        console.log(spec);
    
         var data = d3_data_transform(wavelength,spec);
         
         render(data); 
+
+        //tl = c_col.length;
+        //al = ages.length;
+        //zl = metallicities.length;
+        //console.log(c_col);
+
+        //x_col = Array(tl);
+        //y_col = Array(tl);
+
+        //for(i=0; i < c_col.length; i++){
+        //    x_col[i] = ages[i % al];
+        //    y_col[i] = metallicities[Math.floor(i / zl)];
+        //}
+
+        //console.log(x_col,y_col);
         
-        //var t = [ /* Target variable */ ];
-        //var x = [ /* X-axis coordinates */ ];
-        //var y = [ /* Y-axis coordinates */ ];
-        //var model = "exponential";
-        //var sigma2 = 0, alpha = 100;
-        //var variogram = kriging.train(t, x, y, model, sigma2, alpha);
-        //var xnew, ynew /* Pair of new coordinates to predict */;
+        /* kriging.js example */
+        //n = 580;  // fails for large array sizes
+        //var model = "spherical";//"exponential";
+        //var sigma2 = 0, alpha = 0.1;
+        //var variogram = kriging.train(c_col.slice(0,n), x_col.slice(0,n), y_col.slice(0,n), model, sigma2, alpha);
+        //var xnew = 0.011;
+        //var ynew = -0.648;
         //var tpredicted = kriging.predict(xnew, ynew, variogram);
+        //console.log(tpredicted);
+        //console.log(coeffs[0][0]);
 
     }
     catch(err) {
        console.log(err);
     };
 }
+
 
 
 function d3_data_transform(wavelength,spec){
@@ -158,6 +266,24 @@ function render(data){
           .transition().duration(duration)
           .attr("d", line)
           .style("stroke", color);
+       
+
+      // text label for the x axis
+    svg.append("text")
+        .attr("transform",
+              "translate(" + (width/2) + " ," +
+                             (height + margin.top + 20) + ")")
+        .style("text-anchor", "middle")
+        .text("Wavelength (Angstroms)");
+  
+    // text label for the y axis
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Flux");
 
 }
 
@@ -177,10 +303,6 @@ var svg = d3.select("#my_dataviz")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
-
-var color = 'steelblue';
-var duration = 1000;
-
 const xScale = d3.scaleLinear()
     .range([0,width]);
 
@@ -192,18 +314,12 @@ const line = d3.line()
     .y(d => yScale(d.y))
     .curve(d3.curveMonotoneX);
 
-//svg.append("g")
-//  .attr("class", "x axis")
-//  .attr("transform", "translate(0," + height + ")")
-//  .call(d3.axisBottom(x));
-//
-//svg.append("g")
-//  .attr("class", "y axis")
-//  .call(d3.axisLeft(y));
-
+/* plotting variables */
+var color = 'steelblue';
+var duration = 1000;
 
 document.getElementById("age_container").addEventListener("change", function(){main(false)});
 document.getElementById("Z_container").addEventListener("change", function(){main(false)});
-
+            
 main(true);
 

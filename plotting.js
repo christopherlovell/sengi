@@ -1,8 +1,23 @@
 function render(data){
 
-    xScale.domain(d3.extent(data[0], function(d) { return d.x; }));
-    yScale.domain([d3.min(data[0], function(d) { return d.y; }),
-                   d3.max(data[0], function(d) { return +d.y; })]);
+    var yMin = d3.min(data, function(arr){
+       return d3.min(arr, function(ar){return ar.y});
+    });
+    
+    var yMax = d3.max(data, function(arr){
+       return d3.max(arr, function(ar){return ar.y});
+    });
+   
+    var xMin = d3.min(data, function(arr){
+       return d3.min(arr, function(ar){return ar.x});
+    });
+    
+    var xMax = d3.max(data, function(arr){
+       return d3.max(arr, function(ar){return ar.x});
+    });
+
+    yScale.domain([yMin,yMax]);
+    xScale.domain([xMin,xMax]);
 
     // create axis
     var yAxis = d3.axisLeft(yScale);

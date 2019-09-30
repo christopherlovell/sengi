@@ -8,7 +8,7 @@ function d3_data_transform(wavelength,spec){
     }
 
     //return data;
-    return new Array (data);
+    return data;
 }
 
 
@@ -17,17 +17,17 @@ async function load_data(id){
 
     try {
         let [wavelength,components,mean,coeffs,ages,metallicities] = await Promise.all([
-             fetch("data/wavelength.txt")
+            fetch("data/wavelength.txt")
                 .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
 
-             fetch("data/components.txt")
+            fetch("data/components.txt")
                 .then(x => x.text())
                 .then(text => text.split(/\r?\n/).map( pair => pair.split(/\s+/).map(Number) )),
 
-             fetch("data/mean.txt")
+            fetch("data/mean.txt")
                 .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
 
-             fetch("data/coeffs.txt")
+            fetch("data/coeffs.txt")
                 .then(x => x.text())
                 .then(text => text.split('\n').map( pair => pair.split(/\s+/).map(Number) )),
 
@@ -53,8 +53,10 @@ async function load_data(id){
                     'coeffs': coeffs,
                     'ages': ages,
                     'metallicities': metallicities}
+        
+        sessionStorage.setObj(id,dict);
 
-        sessionStorage.setObj('id',dict);
+        return dict;
     }
     catch(err) {
        console.log(err);

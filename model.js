@@ -25,36 +25,52 @@ const line = d3.line()
     .y(d => yScale(d.y))
     .curve(d3.curveMonotoneX);
 
-/* plotting variables */
+
 var color = 'steelblue';
 var duration = 1000;
 
-function main(lineid,first){
-    console.log(lineid);
-    load_data(line_id)
-    dict = sessionStorage.getObj(line_id);
+async function main(lineid,first){
     
-    console.log(lineid);
-    if (first){
-        init_param_slider(lineid,"_age_slider",dict["ages"]);
-        init_param_slider(lineid,"_Z_slider",dict["metallicities"]);
-    }
+    load_data(lineid)
+      .then((dict) => {
 
-    slider_vals = get_slider_values(line_id)
-    
-    console.log(dict);
-    
-    spec = reconstruct(slider_vals[0],slider_vals[1],
-                       dict["ages"],dict["metallicities"],
-                       dict["coeffs"],dict["components"],dict["mean"]);
-    
-    var data = d3_data_transform(dict["wavelength"],spec);
-    render(data); 
+        if (first){
+            init_param_slider(lineid,"_age_slider",dict["ages"]);
+            init_param_slider(lineid,"_Z_slider",dict["metallicities"]);
+        }
+
+        lines = document.getElementById('line_controls').childNodes;
+        
+        var data = [];
+
+        for (var l = 0; l < lines.length; ++l) {
+            line_id = lines[l].id;
+            console.log(line_id);
+
+            dict = sessionStorage.getObj(line_id);
+            slider_vals = get_slider_values(line_id);
+            
+            spec = reconstruct(slider_vals[0],slider_vals[1],
+                               dict["ages"],dict["metallicities"],
+                               dict["coeffs"],dict["components"],dict["mean"]);
+
+            data.push(d3_data_transform(dict["wavelength"],spec));
+        }
+
+        render(data); 
+    });
 }
 
 
 // **** Add initial line
-line_id = "test_data"
-add_line_controls(line_id);
-main(line_id,true);
+linef = "test_data"
+lid = 0;
+add_line_controls(linef.concat(lid));
+main(linef.concat(lid),true);
+
+document.getElementById('add_line').addEventListener("click", function() {
+                                                              lid += 1;
+                                                              add_line_controls(linef.concat(lid));
+                                                              main(linef.concat(lid),true);
+                                                            });
 

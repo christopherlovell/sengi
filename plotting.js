@@ -62,11 +62,11 @@ function render(data){
           .style("stroke", function(d,i){ return color(i)});
 
 
-      // text label for the x axis
+    // text label for the x axis
     svg.append("text")
         .attr("transform",
               "translate(" + (width/2) + " ," +
-                             (height + margin.top + 20) + ")")
+                             (height + margin.top + 30) + ")")
         .style("text-anchor", "middle")
         .text("Wavelength (Angstroms)");
 

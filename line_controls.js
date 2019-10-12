@@ -1,3 +1,14 @@
+function toggle_visibility(id){
+    var e = document.getElementById(id);
+    if (e.style.display == 'block' || e.style.display=='')
+    {
+        e.style.display = 'none';
+    }
+    else 
+    {
+        e.style.display = 'block';
+    }
+}
 
 
 function get_slider_values(lineid){
@@ -19,6 +30,29 @@ function add_line_controls(lineid){
     div.id = lineid;
     document.getElementById("line_controls").appendChild(div);
 
+    /* toggle button */
+    var p = document.createElement("p");
+    p.id=lineid.concat("_control_toggle");
+    p.className="line_control_toggle";
+       
+    // add horizontal line
+    var hr = document.createElement('hr');
+    p.appendChild(hr);
+
+    // add text
+    var content = document.createTextNode(lineid);
+    p.appendChild(content);
+    document.getElementById(lineid).appendChild(p);
+
+    // add button
+    var div = document.createElement("div");
+    div.id=lineid.concat("_toggle_button");
+    div.className="arrow-down";
+    //document.getElementById(lineid)
+    p.appendChild(div);
+
+
+
     /* age slider */
     var div = document.createElement("div");
     div.id=lineid.concat("_age_slider");
@@ -30,6 +64,13 @@ function add_line_controls(lineid){
     div.id=lineid.concat("_Z_slider");
     div.className="param_slider";
     document.getElementById(lineid).appendChild(div);
+
+    document.getElementById(lineid.concat("_toggle_button"))
+        .addEventListener("click", function(){
+            document.getElementById(lineid.concat("_toggle_button")).classList.toggle('active')
+            toggle_visibility(lineid.concat("_age_slider"));
+            toggle_visibility(lineid.concat("_Z_slider"));
+        });
 }
 
 

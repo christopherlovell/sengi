@@ -1,6 +1,6 @@
 
-// ---- D3 plotting init
-var margin = {top: 10, right: 30, bottom: 30, left: 60},
+// ---- D3 plotting initialisation
+var margin = {top: 10, right: 30, bottom: 60, left: 60},
     width = 660 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
@@ -26,7 +26,7 @@ const line = d3.line()
     .curve(d3.curveMonotoneX);
 
 var color = d3.scaleOrdinal(d3.schemeCategory10);
-var duration = 1000;
+var duration = 500;
 
 
 async function main(lineid,first){

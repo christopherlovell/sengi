@@ -24,21 +24,18 @@ function add_line_controls(lineid){
     div.id=lineid.concat("_age_slider");
     div.className="param_slider";
     document.getElementById(lineid).appendChild(div);
-    //update_param_slider(lineid.concat("_age_slider"),age);
     
     /* metallicity slider */
     var div = document.createElement("div");
     div.id=lineid.concat("_Z_slider");
     div.className="param_slider";
     document.getElementById(lineid).appendChild(div);
-    //update_param_slider(lineid.concat("_Z_slider"),metallicity);
 }
 
 
 function init_param_slider(lineid,div_extension,arr){
 
     div_name = lineid.concat(div_extension);
-    //var div = document.querySelector(div);
     var div = document.getElementById(div_name);
 
     min_x = Number(math.min(arr).toFixed(4));

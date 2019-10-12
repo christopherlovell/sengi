@@ -29,37 +29,46 @@ const line = d3.line()
 var color = 'steelblue';
 var duration = 1000;
 
+
 async function main(lineid,first){
     
     load_data(lineid)
-      .then((dict) => {
-
-        if (first){
-            init_param_slider(lineid,"_age_slider",dict["ages"]);
-            init_param_slider(lineid,"_Z_slider",dict["metallicities"]);
-        }
-
-        lines = document.getElementById('line_controls').childNodes;
-        
-        var data = [];
-
-        for (var l = 0; l < lines.length; ++l) {
-            line_id = lines[l].id;
-            console.log(line_id);
-
-            dict = sessionStorage.getObj(line_id);
-            slider_vals = get_slider_values(line_id);
+        .then((dict) => {
+   
+            // if this is the first time the line is created, make some sliders
+            if (first){
+                init_param_slider(lineid,"_age_slider",dict["ages"]);
+                init_param_slider(lineid,"_Z_slider",dict["metallicities"]);
+            }
             
+            slider_vals = get_slider_values(lineid);
+
             spec = reconstruct(slider_vals[0],slider_vals[1],
-                               dict["ages"],dict["metallicities"],
-                               dict["coeffs"],dict["components"],dict["mean"]);
+                           dict["ages"],dict["metallicities"],
+                           dict["coeffs"],dict["components"],dict["mean"]);
 
-            data.push(d3_data_transform(dict["wavelength"],spec));
-        }
+            dat = d3_data_transform(dict["wavelength"],spec);
+            
+            // save the newly created (refreshed) line
+            sessionStorage.setObj(lineid,dat);
+    
+            // now loop through existing lines and concatenate the data
+            lines = document.getElementById('line_controls').childNodes;
+            var data = [];
 
-        render(data); 
-    });
+            for (var l = 0; l < lines.length; ++l) {
+                
+                line_id = lines[l].id;
+                
+                dat = sessionStorage.getObj(line_id);
+                data.push(dat);
+            }
+
+            // render all lines together
+            render(data); 
+        });
 }
+
 
 
 // **** Add initial line

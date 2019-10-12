@@ -54,7 +54,7 @@ async function load_data(id){
                     'ages': ages,
                     'metallicities': metallicities}
         
-        sessionStorage.setObj(id,dict);
+        //sessionStorage.setObj(id,dict);
 
         return dict;
     }

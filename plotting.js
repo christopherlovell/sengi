@@ -54,12 +54,12 @@ function render(data){
         .append("path")
           .attr("class", "line")
           .attr("d", line)
-          .style("stroke", color)
+          .style("stroke", function(d,i){ return color(i)})
         // Update new data
         .merge(lines)
           .transition().duration(duration)
           .attr("d", line)
-          .style("stroke", color);
+          .style("stroke", function(d,i){ return color(i)});
 
 
       // text label for the x axis

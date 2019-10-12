@@ -25,8 +25,7 @@ const line = d3.line()
     .y(d => yScale(d.y))
     .curve(d3.curveMonotoneX);
 
-
-var color = 'steelblue';
+var color = d3.scaleOrdinal(d3.schemeCategory10);
 var duration = 1000;
 
 

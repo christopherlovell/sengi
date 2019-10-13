@@ -28,42 +28,74 @@ function add_line_controls(lineid){
 
     var div = document.createElement("div");
     div.id = lineid;
+    div.className="container"
     document.getElementById("line_controls").appendChild(div);
 
-    /* toggle button */
-    var p = document.createElement("p");
-    p.id=lineid.concat("_control_toggle");
-    p.className="line_control_toggle";
-       
     // add horizontal line
     var hr = document.createElement('hr');
-    p.appendChild(hr);
+    div.appendChild(hr);
+    
+    /* header row */
+    var row_div = document.createElement("div");
+    row_div.className="row"
+    document.getElementById(lineid).appendChild(row_div);
 
     // add text
-    var content = document.createTextNode(lineid);
-    p.appendChild(content);
-    document.getElementById(lineid).appendChild(p);
+    var child_div = document.createElement("div");
+    child_div.className="eleven columns"
+    var content = document.createTextNode("Line ".concat(Number(lineid.substr(9))+1));
+    child_div.appendChild(content)
+    row_div.appendChild(child_div);
 
     // add button
-    var div = document.createElement("div");
-    div.id=lineid.concat("_toggle_button");
-    div.className="arrow-down";
-    //document.getElementById(lineid)
-    p.appendChild(div);
+    var child_div = document.createElement("div");
+    child_div.className="one column"
+    var but = document.createElement("div");
+    but.id=lineid.concat("_toggle_button");
+    but.className="arrow-down";
+    child_div.appendChild(but)
+    row_div.appendChild(child_div);
+    
+    /* labels row */
+    var row_div = document.createElement("div");
+    row_div.className="row"
+    document.getElementById(lineid).appendChild(row_div);
+    
+    var child_div = document.createElement("div");
+    child_div.className="six columns"
+    child_div.append(document.createTextNode("Age"));
+    row_div.appendChild(child_div);
+    
+    var child_div = document.createElement("div");
+    child_div.className="six columns"
+    child_div.append(document.createTextNode("Metallicity"));
+    row_div.appendChild(child_div);
 
-
+    /* slider row */
+    var row_div = document.createElement("div");
+    row_div.className="row"
 
     /* age slider */
     var div = document.createElement("div");
     div.id=lineid.concat("_age_slider");
     div.className="param_slider";
-    document.getElementById(lineid).appendChild(div);
+    var col_div = document.createElement("div");
+    col_div.className="row"
+    col_div.className="six columns";
+    col_div.appendChild(div)
+    row_div.appendChild(col_div);
     
     /* metallicity slider */
     var div = document.createElement("div");
     div.id=lineid.concat("_Z_slider");
     div.className="param_slider";
-    document.getElementById(lineid).appendChild(div);
+    var col_div = document.createElement("div");
+    col_div.className="row"
+    col_div.className="six columns";
+    col_div.appendChild(div)
+    row_div.appendChild(col_div);
+    
+    document.getElementById(lineid).appendChild(row_div);
 
     document.getElementById(lineid.concat("_toggle_button"))
         .addEventListener("click", function(){

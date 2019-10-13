@@ -15,26 +15,28 @@ function d3_data_transform(wavelength,spec){
 
 async function load_data(id){
 
+    var url='https://www.christopherlovell.co.uk/speedy_sed';
+
     try {
         let [wavelength,components,mean,coeffs,ages,metallicities] = await Promise.all([
-            fetch("data/wavelength.txt")
+            fetch(str.concat(url,"data/wavelength.txt"))
                 .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
 
-            fetch("data/components.txt")
+            fetch(str.concat(url,"data/components.txt"))
                 .then(x => x.text())
                 .then(text => text.split(/\r?\n/).map( pair => pair.split(/\s+/).map(Number) )),
 
-            fetch("data/mean.txt")
+            fetch(str.concat(url,"data/mean.txt"))
                 .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
 
-            fetch("data/coeffs.txt")
+            fetch(str.concat(url,"data/coeffs.txt"))
                 .then(x => x.text())
                 .then(text => text.split('\n').map( pair => pair.split(/\s+/).map(Number) )),
 
-            fetch("data/ages.txt")
+            fetch(str.concat(url,"data/ages.txt"))
                 .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
 
-            fetch("data/metallicities.txt")
+            fetch(str.concat(url,"data/metallicities.txt"))
                 .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
         ])
 

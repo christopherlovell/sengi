@@ -19,24 +19,24 @@ async function load_data(id){
 
     try {
         let [wavelength,components,mean,coeffs,ages,metallicities] = await Promise.all([
-            fetch(str.concat(url,"data/wavelength.txt"))
+            fetch(url.concat("data/wavelength.txt"))
                 .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
 
-            fetch(str.concat(url,"data/components.txt"))
+            fetch(url.concat("data/components.txt"))
                 .then(x => x.text())
                 .then(text => text.split(/\r?\n/).map( pair => pair.split(/\s+/).map(Number) )),
 
-            fetch(str.concat(url,"data/mean.txt"))
+            fetch(url.concat("data/mean.txt"))
                 .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
 
-            fetch(str.concat(url,"data/coeffs.txt"))
+            fetch(url.concat("data/coeffs.txt"))
                 .then(x => x.text())
                 .then(text => text.split('\n').map( pair => pair.split(/\s+/).map(Number) )),
 
-            fetch(str.concat(url,"data/ages.txt"))
+            fetch(url.concat("data/ages.txt"))
                 .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
 
-            fetch(str.concat(url,"data/metallicities.txt"))
+            fetch(url.concat("data/metallicities.txt"))
                 .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
         ])
 

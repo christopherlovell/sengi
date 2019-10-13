@@ -20,24 +20,30 @@ async function load_data(id){
     try {
         let [wavelength,components,mean,coeffs,ages,metallicities] = await Promise.all([
             fetch(url.concat("data/wavelength.txt"))
-                .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
+                .then(x => x.text())
+                .then(text => text.split(/\r|\n/).map(Number)),
 
             fetch(url.concat("data/components.txt"))
                 .then(x => x.text())
-                .then(text => text.split(/\r?\n/).map( pair => pair.split(/\s+/).map(Number) )),
+                .then(text => text.split(/\r?\n/)
+                    .map( pair => pair.split(/\s+/).map(Number) )),
 
             fetch(url.concat("data/mean.txt"))
-                .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
+                .then(x => x.text())
+                .then(text => text.split(/\r|\n/).map(Number)),
 
             fetch(url.concat("data/coeffs.txt"))
                 .then(x => x.text())
-                .then(text => text.split('\n').map( pair => pair.split(/\s+/).map(Number) )),
+                .then(text => text.split('\n')
+                    .map( pair => pair.split(/\s+/).map(Number) )),
 
             fetch(url.concat("data/ages.txt"))
-                .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
+                .then(x => x.text())
+                .then(text => text.split(/\r|\n/).map(Number)),
 
             fetch(url.concat("data/metallicities.txt"))
-                .then(x => x.text()).then(text => text.split(/\r|\n/).map(Number)),
+                .then(x => x.text())
+                .then(text => text.split(/\r|\n/).map(Number)),
         ])
 
         // for some reason split is adding an extra element at the end of arrays

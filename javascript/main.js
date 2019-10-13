@@ -1,18 +1,21 @@
 
 // ---- D3 plotting initialisation
-var margin = {top: 10, right: 30, bottom: 60, left: 60},
-    width = 660 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+var margin = {top: 10, right: 30, bottom: 60, left: 60}
 
+var chartDiv = document.getElementById('my_dataviz');
+var width = chartDiv.clientWidth - margin.left - margin.right;
+var ratio = 1.5
+var height = (width / 1.5) - margin.top - margin.bottom
+console.log(width,height);
 
 // append the svg object to the body of the page
-var svg = d3.select("#my_dataviz")
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
+var svg = d3.select("div#my_dataviz")
+    .append("svg")
+     .attr("width", width + margin.left + margin.right)
+     .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
 
 const xScale = d3.scaleLinear()
     .range([0,width]);

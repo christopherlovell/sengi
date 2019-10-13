@@ -92,7 +92,7 @@ function init_param_slider(lineid,div_extension,arr){
         format: {
             // 'to' the formatted value. Receives a number.
             to: function (value) {
-                return Number(value).toFixed(4);
+                return value.toFixed(4);
             },
             // 'from' the formatted value.
             // Receives a string, should return a number.
@@ -106,7 +106,7 @@ function init_param_slider(lineid,div_extension,arr){
             stepped: true,
             density: 2,
             format: {
-                to: function (value) { return Number(value).toFixed(2); },
+                to: function (value) { return value.toFixed(2); },
                 from: function (value) { return Number(value).toFixed(4); }
             }
         }

@@ -38,11 +38,18 @@ function add_line_controls(lineid){
     /* header row */
     var row_div = document.createElement("div");
     row_div.className="row"
+    row_div.style.backgroundColor=color(Number(lineid.substr(9)));
+    row_div.style.borderRadius = "25px";
     document.getElementById(lineid).appendChild(row_div);
 
+    // ads whitespace
+    var child_div = document.createElement("div");
+    child_div.className="one column"
+    row_div.appendChild(child_div);
+    
     // add text
     var child_div = document.createElement("div");
-    child_div.className="eleven columns"
+    child_div.className="ten columns"
     var content = document.createTextNode("Line ".concat(Number(lineid.substr(9))+1));
     child_div.appendChild(content)
     row_div.appendChild(child_div);
@@ -59,6 +66,7 @@ function add_line_controls(lineid){
     /* labels row */
     var row_div = document.createElement("div");
     row_div.className="row"
+    row_div.id=lineid.concat("_param_labels")
     document.getElementById(lineid).appendChild(row_div);
     
     var child_div = document.createElement("div");
@@ -74,6 +82,7 @@ function add_line_controls(lineid){
     /* slider row */
     var row_div = document.createElement("div");
     row_div.className="row"
+    row_div.id=lineid.concat("_param_slider")
 
     /* age slider */
     var div = document.createElement("div");
@@ -100,8 +109,8 @@ function add_line_controls(lineid){
     document.getElementById(lineid.concat("_toggle_button"))
         .addEventListener("click", function(){
             document.getElementById(lineid.concat("_toggle_button")).classList.toggle('active')
-            toggle_visibility(lineid.concat("_age_slider"));
-            toggle_visibility(lineid.concat("_Z_slider"));
+            toggle_visibility(lineid.concat("_param_slider"));
+            toggle_visibility(lineid.concat("_param_labels"));
         });
 }
 

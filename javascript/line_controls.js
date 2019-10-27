@@ -4,6 +4,10 @@ function toggle_visibility(id){
     else { show(e); }
 }
 
+/* 
+ * Animate hide and show
+ * see https://gomakethings.com/how-to-add-transition-animations-to-vanilla-javascript-show-and-hide-methods/
+ */
 var show = function (elem) {
 
 	// Get the natural height of the element

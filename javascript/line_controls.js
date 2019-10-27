@@ -23,6 +23,7 @@ function get_slider_values(lineid){
 }
 
 
+
 function add_line_controls(lineid){
     /* lineid: name of line */
 
@@ -37,77 +38,44 @@ function add_line_controls(lineid){
     
     /* header row */
     var row_div = document.createElement("div");
-    row_div.className="row"
+    row_div.id = lineid.concat("_header_button");
+    row_div.className="row header_button"
     row_div.style.backgroundColor=color(Number(lineid.substr(9)));
     row_div.style.borderRadius = "25px";
     document.getElementById(lineid).appendChild(row_div);
-
-    // ads whitespace
-    var child_div = document.createElement("div");
-    child_div.className="one column"
-    row_div.appendChild(child_div);
     
-    // add text
-    var child_div = document.createElement("div");
-    child_div.className="ten columns"
-    var content = document.createTextNode("Line ".concat(Number(lineid.substr(9))+1));
-    child_div.appendChild(content)
-    row_div.appendChild(child_div);
-
-    // add button
-    var child_div = document.createElement("div");
-    child_div.className="one column"
-    var but = document.createElement("div");
-    but.id=lineid.concat("_toggle_button");
-    but.className="arrow-down";
-    child_div.appendChild(but)
-    row_div.appendChild(child_div);
-    
-    /* labels row */
-    var row_div = document.createElement("div");
-    row_div.className="row"
-    row_div.id=lineid.concat("_param_labels")
-    document.getElementById(lineid).appendChild(row_div);
-    
-    var child_div = document.createElement("div");
-    child_div.className="six columns"
-    child_div.append(document.createTextNode("Age"));
-    row_div.appendChild(child_div);
-    
-    var child_div = document.createElement("div");
-    child_div.className="six columns"
-    child_div.append(document.createTextNode("Metallicity"));
-    row_div.appendChild(child_div);
-
-    /* slider row */
+    /* sliders row */
     var row_div = document.createElement("div");
     row_div.className="row"
     row_div.id=lineid.concat("_param_slider")
-
+    document.getElementById(lineid).appendChild(row_div);
+    
+    /* age column */
+    var col_div = document.createElement("div");
+    col_div.className="six columns"
+    col_div.append(document.createTextNode("Age"));
+    row_div.appendChild(col_div);
+    
     /* age slider */
     var div = document.createElement("div");
     div.id=lineid.concat("_age_slider");
     div.className="param_slider";
+    col_div.appendChild(div);
+    
     var col_div = document.createElement("div");
-    col_div.className="row"
-    col_div.className="six columns";
-    col_div.appendChild(div)
+    col_div.className="six columns"
+    col_div.append(document.createTextNode("Metallicity"));
     row_div.appendChild(col_div);
     
     /* metallicity slider */
     var div = document.createElement("div");
     div.id=lineid.concat("_Z_slider");
     div.className="param_slider";
-    var col_div = document.createElement("div");
-    col_div.className="row"
-    col_div.className="six columns";
-    col_div.appendChild(div)
-    row_div.appendChild(col_div);
+    col_div.appendChild(div);
     
-    document.getElementById(lineid).appendChild(row_div);
     update_active_button(lineid);
 
-    document.getElementById(lineid.concat("_toggle_button"))
+    document.getElementById(lineid.concat("_header_button"))
         .addEventListener("click", function(){
             update_active_button(lineid);
         });
@@ -121,13 +89,10 @@ function update_active_button(lineid){
         if (lcs[l].classList.contains('active')) {
             lcs[l].classList.toggle('active');        
             toggle_visibility(lcs[l].id.concat("_param_slider"));
-            toggle_visibility(lcs[l].id.concat("_param_labels"));
         }
-            
     }
     document.getElementById(lineid).classList.toggle('active')
     toggle_visibility(lineid.concat("_param_slider"));
-    toggle_visibility(lineid.concat("_param_labels"));
 }
 
 

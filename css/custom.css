@@ -17,9 +17,13 @@
   stroke-width: 1.5px;
 }
 
+.header_button {
+  height: 25px;
+}
+
 /* CUSTOM arrow toggle */
 
-.arrow-down {
+/*.arrow-down {
   width: 25px;
   height: 25px;
   background: Teal;
@@ -59,7 +63,9 @@
 
 .arrow-down.active:after {
   transform: rotate(45deg);
-}/* END CUSTOM arrow toggle */
+}*/
+
+/* END CUSTOM arrow toggle */
 
 
 

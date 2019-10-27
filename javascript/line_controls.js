@@ -29,7 +29,7 @@ function add_line_controls(lineid){
     var div = document.createElement("div");
     div.id = lineid;
     div.className="container active"
-    document.getElementById("line_controls").appendChild(div);
+    document.getElementById("line_controls").prepend(div);
 
     // add horizontal line
     var hr = document.createElement('hr');

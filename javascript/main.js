@@ -59,7 +59,6 @@ async function main(lineid,first){
             var data = [];
 
             for (var l = 0; l < lines.length; ++l) {
-                
                 line_id = lines[l].id;
                 
                 dat = sessionStorage.getObj(line_id);
@@ -67,7 +66,7 @@ async function main(lineid,first){
             }
 
             // render all lines together
-            render(data); 
+            render(data.reverse()); 
         });
 }
 

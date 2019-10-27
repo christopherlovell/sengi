@@ -1,14 +1,49 @@
 function toggle_visibility(id){
     var e = document.getElementById(id);
-    if (e.style.display == 'block' || e.style.display=='')
-    {
-        e.style.display = 'none';
-    }
-    else 
-    {
-        e.style.display = 'block';
-    }
+    if (e.classList.contains('is-visible')) { hide(e); }
+    else { show(e); }
 }
+
+var show = function (elem) {
+
+	// Get the natural height of the element
+	var getHeight = function () {
+		elem.style.display = 'block'; // Make it visible
+		var height = elem.scrollHeight + 'px'; // Get it's height
+		elem.style.display = ''; //  Hide it again
+		return height;
+	};
+
+	var height = getHeight(); // Get the natural height
+	elem.classList.add('is-visible'); // Make the element visible
+	elem.style.height = height; // Update the max-height
+
+	// Once the transition is complete, remove the inline max-height so the content can scale responsively
+	window.setTimeout(function () {
+		elem.style.height = '';
+	}, 350);
+
+};
+
+var hide = function (elem) {
+
+	// Give the element a height to change from
+	elem.style.height = elem.scrollHeight + 'px';
+
+    console.log('hide',elem.style.height,elem.scrollHeight);
+
+	// Set the height back to 0
+	window.setTimeout(function () {
+		elem.style.height = '0';
+	}, 1);
+
+	// When the transition is complete, hide it
+	window.setTimeout(function () {
+		elem.classList.remove('is-visible');
+	}, 350);
+
+};
+
 
 
 function get_slider_values(lineid){
@@ -46,7 +81,7 @@ function add_line_controls(lineid){
     
     /* sliders row */
     var row_div = document.createElement("div");
-    row_div.className="row"
+    row_div.className="row sliders is-visible"
     row_div.id=lineid.concat("_param_slider")
     document.getElementById(lineid).appendChild(row_div);
     
@@ -73,26 +108,46 @@ function add_line_controls(lineid){
     div.className="param_slider";
     col_div.appendChild(div);
     
-    update_active_button(lineid);
+    
+    console.log(row_div.scrollHeight);
+    
+    update_active_button(lineid,true);
 
     document.getElementById(lineid.concat("_header_button"))
         .addEventListener("click", function(){
-            update_active_button(lineid);
+            update_active_button(lineid,false);
         });
 }
 
 
-function update_active_button(lineid){
-    var lcs = document.getElementById('line_controls').childNodes;
+function update_active_button(lineid,new_line) { 
 
+    /* deactivate all other active buttons */
+    var lcs = document.getElementById('line_controls').childNodes;
     for (var l = 0; l < lcs.length; ++l) {
+
+        // if this is the current line, skip it
+        if (lcs[l].id == lineid){ 
+            continue; 
+        }
+
+        // if the line is active...
         if (lcs[l].classList.contains('active')) {
+            // deactivate it
             lcs[l].classList.toggle('active');        
+            // make it invisible
             toggle_visibility(lcs[l].id.concat("_param_slider"));
         }
     }
-    document.getElementById(lineid).classList.toggle('active')
-    toggle_visibility(lineid.concat("_param_slider"));
+ 
+    // activate current line
+    if (!new_line) {
+        thisline = document.getElementById(lineid);
+        thisline.classList.toggle('active');
+    
+        // make it visible
+        toggle_visibility(lineid.concat("_param_slider"));
+    }
 }
 
 

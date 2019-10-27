@@ -1,4 +1,16 @@
 
+.sliders {
+	display: none;
+	height: 0;
+	overflow: hidden;
+	transition: height 350ms ease-in-out;
+}
+
+.sliders.is-visible {
+	display: block;
+	height: auto;
+}
+
 .param_slider {
     display: block;
     margin-top: 50px;

@@ -28,7 +28,7 @@ function add_line_controls(lineid){
 
     var div = document.createElement("div");
     div.id = lineid;
-    div.className="container"
+    div.className="container active"
     document.getElementById("line_controls").appendChild(div);
 
     // add horizontal line
@@ -105,13 +105,29 @@ function add_line_controls(lineid){
     row_div.appendChild(col_div);
     
     document.getElementById(lineid).appendChild(row_div);
+    update_active_button(lineid);
 
     document.getElementById(lineid.concat("_toggle_button"))
         .addEventListener("click", function(){
-            document.getElementById(lineid.concat("_toggle_button")).classList.toggle('active')
-            toggle_visibility(lineid.concat("_param_slider"));
-            toggle_visibility(lineid.concat("_param_labels"));
+            update_active_button(lineid);
         });
+}
+
+
+function update_active_button(lineid){
+    var lcs = document.getElementById('line_controls').childNodes;
+
+    for (var l = 0; l < lcs.length; ++l) {
+        if (lcs[l].classList.contains('active')) {
+            lcs[l].classList.toggle('active');        
+            toggle_visibility(lcs[l].id.concat("_param_slider"));
+            toggle_visibility(lcs[l].id.concat("_param_labels"));
+        }
+            
+    }
+    document.getElementById(lineid).classList.toggle('active')
+    toggle_visibility(lineid.concat("_param_slider"));
+    toggle_visibility(lineid.concat("_param_labels"));
 }
 
 

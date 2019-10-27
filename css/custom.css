@@ -19,6 +19,11 @@
 
 .header_button {
   height: 25px;
+
+}
+
+.header_button:hover {
+  filter: brightness(85%);
 }
 
 /* CUSTOM arrow toggle */

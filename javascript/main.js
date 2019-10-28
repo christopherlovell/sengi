@@ -46,7 +46,9 @@ var duration = 500;
 
 async function main(lineid,first){
     
-    load_data(lineid)
+    name = 'fsps'
+    
+    load_data(name)
         .then((dict) => {
    
             // if this is the first time the line is created, make some sliders

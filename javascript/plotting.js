@@ -1,7 +1,6 @@
 
 function render(data){
 
-    console.log("here");
     temp = get_data_extent(data);
     yMin = temp[2];
     yMax = temp[3];
@@ -11,8 +10,10 @@ function render(data){
     
     var yAxis = d3.axisLeft(yScale);
     var xAxis = d3.axisBottom(xScale);
-    
-    // draw the new axis
+   
+
+
+    /* ----  Draw the new axes ---- */
     if (svg.selectAll(".y.axis").empty()){
         yAx = svg.append("g")
             .attr("class","y axis")
@@ -30,7 +31,8 @@ function render(data){
             .call(xAxis);
     }
 
-    // Add brushing
+
+    /* ---- Add brushing ---- */
     var brush = d3.brushX()                   // Add the brush feature using the d3.brush function
         .extent( [ [0,0], [width,height] ] )  // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
         .on("end", updateChart);            // Each time the brush selection changes, trigger the 'updateChart' function
@@ -42,7 +44,7 @@ function render(data){
           .call(brush)
     }
 
-    // draw new lines
+      
     var lines = svg.selectAll(".line")
         .data(data)
         .attr("class","line")
@@ -62,27 +64,8 @@ function render(data){
         .attr("d", line)
         .style("stroke", function(d,i){ return color(i) });
 
-    // on double click, reinitialize the chart
-    svg.on("dblclick",function(){
 
-      temp = get_data_extent(data);
-      var xMin = temp[0];
-      var xMax = temp[1];
-      console.log(xScale.domain());
-      xScale.domain([xMin,xMax]);
-      console.log(xScale.domain());
-
-      xAx.transition().duration(1000).call(xAxis);
-
-      lines.enter()
-      //  .merge(lines)
-        .selectAll('path.line')
-        .transition().duration(duration)
-        .attr("d", line)
-        .style("stroke", function(d,i){ return color(i) });
-
-    });
-    
+    /* --- Zoom update chart ---- */
     // wait before resetting
     var idleTimeout;
     function idled() { idleTimeout = null; }
@@ -105,14 +88,47 @@ function render(data){
 
       // Update axis and line position
       xAx.transition().duration(1000).call(xAxis)
+      
       lines.enter()
           .selectAll('path.line')
-          .transition()
-          .duration(1000)
+          .transition().duration(1000)
           .attr("d", line)
           .style("stroke", function(d,i){ return color(i)});
     }
+    
+    
+    /* --- Zoom double-click reset --- */
+    svg.on("dblclick",function(){
 
+      temp = get_data_extent(data);
+      var xMin = temp[0];
+      var xMax = temp[1];
+      xScale.domain([xMin,xMax]);
+
+      xAx.transition().duration(1000).call(xAxis);
+      //lines = draw_lines(data);
+    
+      var lines = svg.selectAll(".line")
+        .data(data)
+        .attr("class","line");
+
+      lines.enter()
+      // add line
+      .append("path")
+        .attr("class", "line")
+        .attr("clip-path", "url(#clip)")
+        .attr("d", line)
+        .style("stroke", function(d,i){ return color(i) })
+      // Update new data
+      .merge(lines)
+        .transition().duration(duration)
+        .attr("d", line)
+        .style("stroke", function(d,i){ return color(i) });
+
+    });
+
+
+    /* --- Axis Labels --- */
     // text label for the x axis
     svg.append("text")
         .attr("transform",

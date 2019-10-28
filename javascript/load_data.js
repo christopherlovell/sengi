@@ -15,7 +15,7 @@ function d3_data_transform(wavelength,spec){
 
 async function load_data(id){
 
-    var url='https://www.christopherlovell.co.uk/speedy_sed/';
+    var url='https://www.christopherlovell.co.uk/sengi/';
 
     try {
         let [wavelength,components,mean,coeffs,ages,metallicities] = await Promise.all([

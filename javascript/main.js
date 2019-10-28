@@ -6,16 +6,28 @@ var chartDiv = document.getElementById('my_dataviz');
 var width = chartDiv.clientWidth - margin.left - margin.right;
 var ratio = 1.5
 var height = (width / 1.5) - margin.top - margin.bottom
-console.log(width,height);
 
 // append the svg object to the body of the page
 var svg = d3.select("div#my_dataviz")
     .append("svg")
-     .attr("width", width + margin.left + margin.right)
-     .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-        .attr("transform",
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .attr("id","dataviz_svg")
+    .append("g")
+// var context = svg.append("g")
+      .attr("id","context")
+      .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
+
+// Add a clipPath: everything out of this area won't be drawn.
+svg.append("defs")
+    .append("clipPath")
+    .attr("id", "clip")
+    .append("rect")
+    .attr("width", width )
+    .attr("height", height )
+    .attr("x", 0)
+    .attr("y", 0);
 
 const xScale = d3.scaleLinear()
     .range([0,width]);
@@ -60,9 +72,18 @@ async function main(lineid,first){
 
             for (var l = 0; l < lines.length; ++l) {
                 line_id = lines[l].id;
-                
                 dat = sessionStorage.getObj(line_id);
                 data.push(dat);
+            }
+
+            // get domain for first line, so can be recovered
+            // when plotting resetting plot later
+            if (first_line){
+                temp = get_data_extent(data);
+                var xMin = temp[0];
+                var xMax = temp[1];
+                xScale.domain([xMin,xMax]);
+                first_line=false;
             }
 
             // render all lines together
@@ -74,6 +95,7 @@ async function main(lineid,first){
 
 // **** Add initial line
 linef = "test_data"
+first_line = true
 lid = 0;
 add_line_controls(linef.concat(lid));
 main(linef.concat(lid),true);

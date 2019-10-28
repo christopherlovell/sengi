@@ -34,8 +34,6 @@ var hide = function (elem) {
 	// Give the element a height to change from
 	elem.style.height = elem.scrollHeight + 'px';
 
-    console.log('hide',elem.style.height,elem.scrollHeight);
-
 	// Set the height back to 0
 	window.setTimeout(function () {
 		elem.style.height = '0';
@@ -111,9 +109,6 @@ function add_line_controls(lineid){
     div.id=lineid.concat("_Z_slider");
     div.className="param_slider";
     col_div.appendChild(div);
-    
-    
-    console.log(row_div.scrollHeight);
     
     update_active_button(lineid,true);
 

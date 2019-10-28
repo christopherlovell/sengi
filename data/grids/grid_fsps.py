@@ -1,12 +1,11 @@
 import numpy as np
 import os
-#import pickle as pcl
-
 import fsps
+
+from h5py_utils import write_data_h5py
 
 Zsol = 0.0127
 
-import h5py
 
 def grid(Nage=80, NZ=20, nebular=True, dust=False):
     """
@@ -51,10 +50,11 @@ def grid(Nage=80, NZ=20, nebular=True, dust=False):
 
 if __name__ == "__main__":
 
-    spec, Z, ages, wl = grid(nebular=False, dust=False, Nage=20, NZ=20)
-    Z = Z * Zsol  # pickle files in absolute metal fractions
+    Nage = 40
+    NZ = 40
 
-    from h5py_utils import write_data_h5py
+    spec, ages, Z, wl = grid(nebular=False, dust=False, Nage=Nage, NZ=NZ)
+    Z = Z * Zsol  # pickle files in absolute metal fractions
 
     fname = 'fsps.h5'
     write_data_h5py(fname,'spec',data=spec,overwrite=True)
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     write_data_h5py(fname,'metallicities',data=Z,overwrite=True)
     write_data_h5py(fname,'wavelength',data=wl,overwrite=True)
 
-    spec, Z, ages, wl = grid(nebular=True, dust=False, Nage=20, NZ=20)
+    spec, ages, Z, wl = grid(nebular=True, dust=False, Nage=Nage, NZ=NZ)
     Z = Z * Zsol  # pickle files in absolute metal fractions
 
     fname = 'fsps_neb.h5'

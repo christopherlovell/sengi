@@ -4,17 +4,14 @@ import fsps
 
 from h5py_utils import write_data_h5py
 
-Zsol = 0.0127
-
-
 def grid(Nage=80, NZ=20, nebular=True, dust=False):
     """
     Generate grid of spectra with FSPS
 
     Returns:
         spec (array, float) spectra, dimensions NZ*Nage
-        metallicities (array, float) metallicity array, units Z / Zsol
-        scale_factors (array, flota) age array in units of the scale factor
+        age (array, float) age array, Gyr
+        metallicities (array, float) metallicity array, Z/Zsol
         wl (array, float) wavelength array in Angstroms
     """
 
@@ -25,21 +22,21 @@ def grid(Nage=80, NZ=20, nebular=True, dust=False):
                                     dust1=0.0) # dust_type=1, dust2=0.2, dust1=0.2)
     else:
         sp = fsps.StellarPopulation(zcontinuous=1, sfh=0, cloudy_dust=True,
-                                    logzsol=0.0, add_neb_emission=nebular)
+                                    add_neb_emission=nebular)
 
 
     wl = np.array(sp.get_spectrum(tage=13, peraa=True)).T[:,0]
 
     ages = np.logspace(-3.5,np.log10(15),num=Nage,base=10)
-    metallicities = np.linspace(3e-3, 5e-2, num=NZ) / Zsol
+    metallicities = np.linspace(-2, 2, num=NZ) # log(Z / Zsol)
 
     spec = np.zeros((len(metallicities), len(ages), len(wl)))
 
     for i, Z in enumerate(metallicities):
         for j, a in enumerate(ages):
 
-            sp.params['logzsol'] = np.log10(Z)
-            if nebular: sp.params['gas_logz'] = np.log10(Z)
+            sp.params['logzsol'] = Z
+            if nebular: sp.params['gas_logz'] = Z
 
             spec[i,j] = sp.get_spectrum(tage=a, peraa=True)[1]   # Lsol / AA
 
@@ -50,11 +47,10 @@ def grid(Nage=80, NZ=20, nebular=True, dust=False):
 
 if __name__ == "__main__":
 
-    Nage = 40
-    NZ = 40
+    Nage = 80
+    NZ = 80
 
     spec, ages, Z, wl = grid(nebular=False, dust=False, Nage=Nage, NZ=NZ)
-    Z = Z * Zsol  # pickle files in absolute metal fractions
 
     fname = 'fsps.h5'
     write_data_h5py(fname,'spec',data=spec,overwrite=True)
@@ -63,7 +59,6 @@ if __name__ == "__main__":
     write_data_h5py(fname,'wavelength',data=wl,overwrite=True)
 
     spec, ages, Z, wl = grid(nebular=True, dust=False, Nage=Nage, NZ=NZ)
-    Z = Z * Zsol  # pickle files in absolute metal fractions
 
     fname = 'fsps_neb.h5'
     write_data_h5py(fname,'spec',data=spec,overwrite=True)

@@ -15,17 +15,16 @@ wl_mask = (wl > 2e3) & (wl < 1e4)
 wl = wl[wl_mask]
 resolution = np.sum(wl_mask)
 comps = 15
-shape = len(ages) * len(Z)
+shape = len(Z) * len(ages)
 
-spec = spec[:,:,wl_mask].reshape((shape,resolution))
-spec_fit = np.log10(spec)
+spec_fit = spec[:,:,wl_mask].reshape((shape,resolution))
 
 spectra_pca = PCA(n_components=comps, svd_solver='randomized')
 coeffs = spectra_pca.fit(spec_fit).transform(spec_fit)
 
 ## save to text files
 np.savetxt('%s/wavelength.txt'%name,wl)
-np.savetxt('%s/ages.txt'%name,ages)
+np.savetxt('%s/ages.txt'%name,np.log10(ages))
 np.savetxt('%s/metallicities.txt'%name,Z)
 np.savetxt('%s/mean.txt'%name,spectra_pca.mean_)
 np.savetxt('%s/components.txt'%name,spectra_pca.components_)

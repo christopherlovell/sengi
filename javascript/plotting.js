@@ -5,7 +5,7 @@ function render(data){
     yMin = temp[2];
     yMax = temp[3];
 
-    yScale.domain([yMin,yMax]);
+    yScale.domain([0.0,yMax]);
     //xScale.domain([xMin,xMax]);
     
     var yAxis = d3.axisLeft(yScale);
@@ -20,7 +20,7 @@ function render(data){
             .call(yAxis);
     } else {
         yAx = svg.selectAll(".y.axis")
-          .transition().duration(1500)
+          //.transition().duration(duration)
           .call(yAxis);
     };
 
@@ -87,11 +87,11 @@ function render(data){
       }
 
       // Update axis and line position
-      xAx.transition().duration(1000).call(xAxis)
+      xAx.transition().duration(duration).call(xAxis)
       
       lines.enter()
           .selectAll('path.line')
-          .transition().duration(1000)
+          .transition().duration(duration)
           .attr("d", line)
           .style("stroke", function(d,i){ return color(i)});
     }
@@ -105,7 +105,7 @@ function render(data){
       var xMax = temp[1];
       xScale.domain([xMin,xMax]);
 
-      xAx.transition().duration(1000).call(xAxis);
+      xAx.transition().duration(duration).call(xAxis);
       //lines = draw_lines(data);
     
       var lines = svg.selectAll(".line")
@@ -152,7 +152,9 @@ function get_data_extent(data) {
 
     /* Get min/max in x and y axis */
     var yMin = d3.min(data, function(arr){
-       return d3.min(arr, function(ar){return ar.y});
+       temp = d3.min(arr, function(ar){return ar.y});
+       if (temp < 0.) { return 0. }
+       else { return temp }
     });
     
     var yMax = d3.max(data, function(arr){

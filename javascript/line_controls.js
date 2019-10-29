@@ -1,11 +1,11 @@
 function update_control_values(lineid){
    
+    sps = get_sps(lineid); 
     vals = get_slider_values(lineid); 
     age = vals[0];
     met = vals[1];
 
     var met_text = "Metallicity [ log(Z / Zsolar) ]: ".concat(met.toFixed(2))
-
     lin_age = Math.pow(10,age);
 
     // get precision, format accordingly
@@ -13,9 +13,15 @@ function update_control_values(lineid){
     else if (lin_age >= 0.01) { var age_text = "Age (Myr): ".concat((lin_age * Math.pow(10,3)).toFixed(2)); }
     else { var age_text = "Age (yr): ".concat((lin_age * Math.pow(10,6)).toFixed(2)); }
 
-    var textnode = document.createTextNode(age_text.concat("    ",met_text));
-    var item = document.getElementById(lineid.concat('_header_button'));
-    item.replaceChild(textnode, item.childNodes[0]);
+    var header_children = document.getElementById(lineid.concat('_header_button')).childNodes;
+    var textnode = document.createTextNode(age_text);
+    header_children[0].replaceChild(textnode, header_children[0].childNodes[0]);
+    
+    var textnode = document.createTextNode(met_text);
+    header_children[1].replaceChild(textnode, header_children[1].childNodes[0]);
+    
+    var textnode = document.createTextNode(sps);
+    header_children[2].replaceChild(textnode, header_children[2].childNodes[0]);
 }
 
 
@@ -42,25 +48,42 @@ function add_line_controls(lineid){
 
     var div = document.createElement("div");
     div.id = lineid;
-    div.className="container active"
+    div.className="container"
     document.getElementById("line_controls").prepend(div);
 
     // add horizontal line
-    var hr = document.createElement('hr');
-    div.appendChild(hr);
+    //var hr = document.createElement('hr');
+    //div.appendChild(hr);
     
     /* header row */
     var row_div = document.createElement("div");
     row_div.id = lineid.concat("_header_button");
     row_div.className="row header_button"
-    row_div.append(document.createTextNode(""));
     row_div.style.backgroundColor=color(Number(lineid.substr(9)));
-    row_div.style.borderRadius = "25px";
     document.getElementById(lineid).appendChild(row_div);
+
+    /* header text */
+    var col_div = document.createElement("div");
+    col_div.className="one-third column header_text";
+    col_div.id="age_text";
+    col_div.append(document.createTextNode(""));
+    row_div.appendChild(col_div);
+
+    var col_div = document.createElement("div");
+    col_div.className="one-third column header_text";
+    col_div.id="met_text";
+    col_div.append(document.createTextNode(""));
+    row_div.appendChild(col_div);
+    
+    var col_div = document.createElement("div");
+    col_div.className="one-third column header_text";
+    col_div.id="met_text";
+    col_div.append(document.createTextNode(""));
+    row_div.appendChild(col_div);
     
     /* sliders row */
     var row_div = document.createElement("div");
-    row_div.className="row sliders is-visible"
+    row_div.className="row sliders"
     row_div.id=lineid.concat("_param_slider")
     document.getElementById(lineid).appendChild(row_div);
     
@@ -140,13 +163,11 @@ function update_active_button(lineid,new_line) {
     }
  
     // activate current line
-    if (!new_line) {
-        thisline = document.getElementById(lineid);
-        thisline.classList.toggle('active');
+    thisline = document.getElementById(lineid);
+    thisline.classList.toggle('active');
     
-        // make it visible
-        toggle_visibility(lineid.concat("_param_slider"));
-    }
+    // make it visible
+    toggle_visibility(lineid.concat("_param_slider"));
 }
 
 

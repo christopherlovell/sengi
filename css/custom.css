@@ -1,4 +1,16 @@
 
+#help_box {
+    display: none;
+    height: 0;
+    overflow: hidden;
+	transition: height 350ms ease-in-out;
+}
+
+#help_box.is-visible{
+    display: block;
+    height: auto;
+}
+
 .sliders {
 	display: none;
 	height: 0;
@@ -15,7 +27,8 @@
     display: block;
     margin-top: 50px;
     margin-bottom: 75px;
-    margin-right: 50px;
+    margin-right: 20px;
+    margin-left: 20px;
 }
 
 .axis path,
@@ -83,7 +96,4 @@
 }*/
 
 /* END CUSTOM arrow toggle */
-
-
-
 

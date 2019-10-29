@@ -51,15 +51,20 @@
     <div class="row">
       <div class="eleven columns"><!-- style="margin-top: 10%"-->
         <p>A speedy SPS spectra viewer, using Principal Component Analysis for reconstruction.</p>
+
       </div>
     </div>
     <div class="row">
-      <div class="one column" style="margin-bottom: 5%">
-        <a class="button" href="/about.html">About</a>
-      </div>
+        <button onclick="toggle_visibility('help_box');console.log('help_box');">Help</button>
+      <a class="button" href="/about.html">About</a>
+    </div>
+    <div class="row" id="help_box">
+        <div class="twelve columns">
+          <p>The sliders at the bottom of the page control the age and metallicity of the chosen SPS model. Click and drag with the mouse to zoom over a particular wavelength range.</p>
+        </div>
     </div>
         
-    <div class="row">
+    <div class="row" style='margin-top: 20px;'>
       <div id="my_dataviz" class="twelve columns"></div>
     </div>
 

@@ -46,10 +46,20 @@ function get_sps(lineid){
 function add_line_controls(lineid){
     /* lineid: name of line */
 
-    var div = document.createElement("div");
-    div.id = lineid;
-    div.className="container"
-    document.getElementById("line_controls").prepend(div);
+    //var div = document.getElementById(lineid);
+    //if (!div) {
+        var div = document.createElement("div");
+        div.id = lineid;
+        div.className="container"
+        document.getElementById("line_controls").prepend(div);
+    //}
+    //else{
+    //    var child = div.lastElementChild;  
+    //    while (child) { 
+    //        e.removeChild(child); 
+    //        child = e.lastElementChild; 
+    //    } 
+    //}
 
     // add horizontal line
     //var hr = document.createElement('hr');
@@ -96,6 +106,7 @@ function add_line_controls(lineid){
     var div = document.createElement("div");
     div.id=lineid.concat("_age_slider");
     div.className="param_slider";
+    init_param_slider(lineid,div);
     col_div.appendChild(div);
     
     col_div.append(document.createTextNode("Age, log(Gyr)"));
@@ -110,6 +121,7 @@ function add_line_controls(lineid){
     var div = document.createElement("div");
     div.id=lineid.concat("_Z_slider");
     div.className="param_slider";
+    init_param_slider(lineid,div);
     col_div.appendChild(div);
     
     col_div.append(document.createTextNode("Metallicity, log(Z / Zsolar)"));
@@ -129,6 +141,9 @@ function add_line_controls(lineid){
 
     document.getElementById(lineid.concat("_sps_selector"))
         .addEventListener("change", function(){
+            /* update sliders */
+
+
             main(lineid,false);
         });
 
@@ -141,6 +156,67 @@ function add_line_controls(lineid){
         });
 }
 
+function init_param_slider(lineid,div){
+
+    //div_name = lineid.concat(div_extension);
+    //var div = document.getElementById(div_name);
+
+    //var min_x = Number(math.min(arr).toFixed(1));
+    //var max_x = Number(math.max(arr).toFixed(1));
+
+    noUiSlider.create(div, {
+        start: [0.0],
+        connect: true,
+        range: {
+            'min': -1,
+            'max': 1
+        },
+        //format: {
+        //    // 'to' the formatted value. Receives a number.
+        //    to: function (value) {
+        //        return value.toFixed(2);
+        //    },
+        //    // 'from' the formatted value.
+        //    // Receives a string, should return a number.
+        //    from: function (value) {
+        //        return Number(value).toFixed(2);
+        //    }
+        //},
+        tooltips: [true],
+        pips: {
+            mode: 'count',
+            //stepped: true,
+            //density: 3,
+            values: 6,
+            //decimals: 2,
+            format: {
+                to: function (value) { return value.toFixed(2); },
+                from: function (value) { return Number(value).toFixed(4); }
+            }
+        }
+    });
+
+    div.noUiSlider.on("change", function(){main(lineid,false)});
+}
+
+function update_param_slider(lineid,str,arr) {
+
+    console.log(arr);
+
+    var slider = document.getElementById(lineid.concat(str))
+    
+    var min_x = Number(math.min(arr).toFixed(1));
+    var max_x = Number(math.max(arr).toFixed(1));
+
+    console.log(min_x,max_x);
+    
+    slider.noUiSlider.updateOptions({
+        range: {
+            'min': min_x,
+            'max': max_x
+        }
+    });
+}
 
 function update_active_button(lineid,new_line) { 
 
@@ -171,50 +247,7 @@ function update_active_button(lineid,new_line) {
 }
 
 
-function init_param_slider(lineid,div_extension,arr){
 
-    div_name = lineid.concat(div_extension);
-    var div = document.getElementById(div_name);
-
-    var min_x = Number(math.min(arr).toFixed(1));
-    var max_x = Number(math.max(arr).toFixed(1));
-
-    noUiSlider.create(div, {
-        start: [0.0],
-        connect: true,
-        range: {
-            'min': min_x,
-            'max': max_x
-        },
-        //format: {
-        //    // 'to' the formatted value. Receives a number.
-        //    to: function (value) {
-        //        return value.toFixed(2);
-        //    },
-        //    // 'from' the formatted value.
-        //    // Receives a string, should return a number.
-        //    from: function (value) {
-        //        return Number(value).toFixed(2);
-        //    }
-        //},
-        tooltips: [true],
-        pips: {
-            mode: 'count',
-            //stepped: true,
-            //density: 3,
-            values: 6,
-            //decimals: 2,
-            format: {
-                to: function (value) { return value.toFixed(2); },
-                from: function (value) { return Number(value).toFixed(4); }
-            }
-        }
-    });
-
-
-
-    div.noUiSlider.on("change", function(){main(lineid,false)});
-}
 
 
 //function init_param_selector(div,arr,id){

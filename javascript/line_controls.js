@@ -4,30 +4,17 @@ function update_control_values(lineid){
     age = vals[0];
     met = vals[1];
 
-    console.log(age,met);
+    var met_text = "Metallicity [ log(Z / Zsolar) ]: ".concat(met.toFixed(2))
 
     lin_age = Math.pow(10,age);
 
     // get precision, format accordingly
-    if (lin_age >= 1.0){
-        var textnode = document.createTextNode("Age (Gyr): ".concat(lin_age.toFixed(2)));
-    }
-    else if (lin_age >= 0.01) {
-        var textnode = document.createTextNode("Age (Myr): ".concat((lin_age * Math.pow(10,3)).toFixed(2)));
-    }
-    else {
-        var textnode = document.createTextNode("Age (yr): ".concat((lin_age * Math.pow(10,6)).toFixed(2)));
-    }
+    if (lin_age >= 1.0){ var age_text = "Age (Gyr): ".concat(lin_age.toFixed(2)); }
+    else if (lin_age >= 0.01) { var age_text = "Age (Myr): ".concat((lin_age * Math.pow(10,3)).toFixed(2)); }
+    else { var age_text = "Age (yr): ".concat((lin_age * Math.pow(10,6)).toFixed(2)); }
 
-    var item = document.getElementById(lineid.concat('_age_column'));
-    console.log(item);
-    console.log(textnode);
-    item.replaceChild(textnode, item.childNodes[0]);
-    
-    var textnode = document.createTextNode("Metallicity [ log(Z / Zsolar) ]: ".concat(met.toFixed(2)));
-    var item = document.getElementById(lineid.concat('_Z_column'));
-    console.log(item);
-    console.log(textnode);
+    var textnode = document.createTextNode(age_text.concat("    ",met_text));
+    var item = document.getElementById(lineid.concat('_header_button'));
     item.replaceChild(textnode, item.childNodes[0]);
 }
 
@@ -61,6 +48,7 @@ function add_line_controls(lineid){
     var row_div = document.createElement("div");
     row_div.id = lineid.concat("_header_button");
     row_div.className="row header_button"
+    row_div.append(document.createTextNode(""));
     row_div.style.backgroundColor=color(Number(lineid.substr(9)));
     row_div.style.borderRadius = "25px";
     document.getElementById(lineid).appendChild(row_div);
@@ -75,8 +63,6 @@ function add_line_controls(lineid){
     var col_div = document.createElement("div");
     col_div.className="six columns";
     col_div.id=lineid.concat("_age_column");
-    col_div.append(document.createTextNode("Age (Gyr)"));
-    row_div.appendChild(col_div);
     
     /* age slider */
     var div = document.createElement("div");
@@ -84,12 +70,13 @@ function add_line_controls(lineid){
     div.className="param_slider";
     col_div.appendChild(div);
     
+    col_div.append(document.createTextNode("Age, log(Gyr)"));
+    row_div.appendChild(col_div);
+    
     /* metallicity column */
     var col_div = document.createElement("div");
     col_div.className="six columns";
     col_div.id=lineid.concat("_Z_column");
-    col_div.append(document.createTextNode("Metallicity (normalised by solar)"));
-    row_div.appendChild(col_div);
     
     /* metallicity slider */
     var div = document.createElement("div");
@@ -97,6 +84,11 @@ function add_line_controls(lineid){
     div.className="param_slider";
     col_div.appendChild(div);
     
+    col_div.append(document.createTextNode("Metallicity, log(Z / Zsolar)"));
+    row_div.appendChild(col_div);
+   
+
+
     update_active_button(lineid,true);
 
     document.getElementById(lineid.concat("_header_button"))
@@ -165,9 +157,11 @@ function init_param_slider(lineid,div_extension,arr){
         //},
         tooltips: [true],
         pips: {
-            mode: 'range',
-            stepped: true,
-            density: 2,
+            mode: 'count',
+            //stepped: true,
+            //density: 3,
+            values: 6,
+            //decimals: 2,
             format: {
                 to: function (value) { return value.toFixed(2); },
                 from: function (value) { return Number(value).toFixed(4); }

@@ -1,52 +1,3 @@
-function toggle_visibility(id){
-    var e = document.getElementById(id);
-    if (e.classList.contains('is-visible')) { hide(e); }
-    else { show(e); }
-}
-
-/* 
- * Animate hide and show
- * see https://gomakethings.com/how-to-add-transition-animations-to-vanilla-javascript-show-and-hide-methods/
- */
-var show = function (elem) {
-
-	// Get the natural height of the element
-	var getHeight = function () {
-		elem.style.display = 'block'; // Make it visible
-		var height = elem.scrollHeight + 'px'; // Get it's height
-		elem.style.display = ''; //  Hide it again
-		return height;
-	};
-
-	var height = getHeight(); // Get the natural height
-	elem.classList.add('is-visible'); // Make the element visible
-	elem.style.height = height; // Update the max-height
-
-	// Once the transition is complete, remove the inline max-height so the content can scale responsively
-	window.setTimeout(function () {
-		elem.style.height = '';
-	}, 350);
-
-};
-
-var hide = function (elem) {
-
-	// Give the element a height to change from
-	elem.style.height = elem.scrollHeight + 'px';
-
-	// Set the height back to 0
-	window.setTimeout(function () {
-		elem.style.height = '0';
-	}, 1);
-
-	// When the transition is complete, hide it
-	window.setTimeout(function () {
-		elem.classList.remove('is-visible');
-	}, 350);
-
-};
-
-
 
 function get_slider_values(lineid){
 
@@ -58,7 +9,6 @@ function get_slider_values(lineid){
     
     return [age, Z];
 }
-
 
 
 function add_line_controls(lineid){
@@ -90,7 +40,7 @@ function add_line_controls(lineid){
     /* age column */
     var col_div = document.createElement("div");
     col_div.className="six columns"
-    col_div.append(document.createTextNode("Age"));
+    col_div.append(document.createTextNode("Age (Gyr)"));
     row_div.appendChild(col_div);
     
     /* age slider */
@@ -99,9 +49,10 @@ function add_line_controls(lineid){
     div.className="param_slider";
     col_div.appendChild(div);
     
+    /* metallicity column */
     var col_div = document.createElement("div");
     col_div.className="six columns"
-    col_div.append(document.createTextNode("Metallicity"));
+    col_div.append(document.createTextNode("Metallicity (normalised by solar)"));
     row_div.appendChild(col_div);
     
     /* metallicity slider */
@@ -155,27 +106,27 @@ function init_param_slider(lineid,div_extension,arr){
     div_name = lineid.concat(div_extension);
     var div = document.getElementById(div_name);
 
-    min_x = Number(math.min(arr).toFixed(4));
-    max_x = Number(math.max(arr).toFixed(4));
+    var min_x = Number(math.min(arr).toFixed(1));
+    var max_x = Number(math.max(arr).toFixed(1));
 
     noUiSlider.create(div, {
-        start: [1.0],
+        start: [0.0],
         connect: true,
         range: {
             'min': min_x,
             'max': max_x
         },
-        format: {
-            // 'to' the formatted value. Receives a number.
-            to: function (value) {
-                return value.toFixed(4);
-            },
-            // 'from' the formatted value.
-            // Receives a string, should return a number.
-            from: function (value) {
-                return Number(value).toFixed(4);
-            }
-        },
+        //format: {
+        //    // 'to' the formatted value. Receives a number.
+        //    to: function (value) {
+        //        return value.toFixed(2);
+        //    },
+        //    // 'from' the formatted value.
+        //    // Receives a string, should return a number.
+        //    from: function (value) {
+        //        return Number(value).toFixed(2);
+        //    }
+        //},
         tooltips: [true],
         pips: {
             mode: 'range',
@@ -187,6 +138,8 @@ function init_param_slider(lineid,div_extension,arr){
             }
         }
     });
+
+
 
     div.noUiSlider.on("change", function(){main(lineid,false)});
 }

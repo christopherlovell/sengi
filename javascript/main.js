@@ -41,7 +41,7 @@ const line = d3.line()
     .curve(d3.curveMonotoneX);
 
 var color = d3.scaleOrdinal(d3.schemeCategory10);
-var duration = 500;
+var duration = 1000;
 
 
 async function main(lineid,first){
@@ -58,6 +58,7 @@ async function main(lineid,first){
             }
             
             slider_vals = get_slider_values(lineid);
+            update_control_values(lineid);
 
             spec = reconstruct(slider_vals[0],slider_vals[1],
                            dict["ages"],dict["metallicities"],

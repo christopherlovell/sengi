@@ -52,10 +52,13 @@ async function main(lineid,first){
         .then((dict) => {
 
             // if this is the first time the line is created, make some sliders
-            if (first){
-                init_param_slider(lineid,"_age_slider",dict["ages"]);
-                init_param_slider(lineid,"_Z_slider",dict["metallicities"]);
-            }
+            //if (first){
+            //    init_param_slider(lineid,"_age_slider",dict["ages"]);
+            //    init_param_slider(lineid,"_Z_slider",dict["metallicities"]);
+            //}
+               
+            update_param_slider(lineid,"_age_slider",dict["ages"]);
+            update_param_slider(lineid,"_Z_slider",dict["metallicities"]);
             
             slider_vals = get_slider_values(lineid);
             update_control_values(lineid);
@@ -97,7 +100,7 @@ async function main(lineid,first){
 
 
 /* SPS models */
-var sps_models = ['fsps','fsps_neb'];
+var sps_models = ['fsps','fsps_neb','bc03','bpass'];
 
 // **** Add initial line
 linef = "test_data"

@@ -45,12 +45,12 @@ var duration = 1000;
 
 
 async function main(lineid,first){
+
+    sps = get_sps(lineid);
     
-    name = 'fsps'
-    
-    load_data(name)
+    load_data(sps)
         .then((dict) => {
-   
+
             // if this is the first time the line is created, make some sliders
             if (first){
                 init_param_slider(lineid,"_age_slider",dict["ages"]);
@@ -81,6 +81,7 @@ async function main(lineid,first){
 
             // get domain for first line, so can be recovered
             // when plotting resetting plot later
+            // TODO: must be cleaner way of doing this
             if (first_line){
                 temp = get_data_extent(data);
                 var xMin = temp[0];
@@ -95,12 +96,15 @@ async function main(lineid,first){
 }
 
 
+/* SPS models */
+var sps_models = ['fsps','fsps_neb'];
 
 // **** Add initial line
 linef = "test_data"
 first_line = true
 lid = 0;
 add_line_controls(linef.concat(lid));
+
 main(linef.concat(lid),true);
 
 document.getElementById('add_line').addEventListener("click", function() {

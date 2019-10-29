@@ -32,6 +32,11 @@ function get_slider_values(lineid){
 }
 
 
+function get_sps(lineid){
+    var e = document.getElementById(lineid.concat("_sps_selector"));
+    return e.options[e.selectedIndex].value;
+}
+
 function add_line_controls(lineid){
     /* lineid: name of line */
 
@@ -86,7 +91,23 @@ function add_line_controls(lineid){
     
     col_div.append(document.createTextNode("Metallicity, log(Z / Zsolar)"));
     row_div.appendChild(col_div);
-   
+
+    /* sps selector */
+    var dropdown = document.createElement("select");
+    dropdown.className="u-full-width";
+    dropdown.id = lineid.concat("_sps_selector");
+    for (i=0; i<sps_models.length; i++) {
+        var opt = document.createElement("option");
+        opt.text = sps_models[i];
+        opt.value = sps_models[i];
+        dropdown.options.add(opt)
+    }
+    row_div.appendChild(dropdown);
+
+    document.getElementById(lineid.concat("_sps_selector"))
+        .addEventListener("change", function(){
+            main(lineid,false);
+        });
 
 
     update_active_button(lineid,true);

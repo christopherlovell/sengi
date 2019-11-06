@@ -1,4 +1,13 @@
 
+.pm_button {
+    text-align:right;
+    font-size:20px;
+}
+
+.header_text {
+    text-align:center;
+}
+
 #help_box {
     display: none;
     height: 0;
@@ -6,7 +15,7 @@
 	transition: height 350ms ease-in-out;
 }
 
-#help_box.is-visible{
+#help_box.is-visible {
     display: block;
     height: auto;
 }
@@ -43,57 +52,11 @@
 }
 
 .header_button {
-  height: 25px;
-
+  height: auto;
 }
 
 .header_button:hover {
   filter: brightness(85%);
 }
 
-/* CUSTOM arrow toggle */
-
-/*.arrow-down {
-  width: 25px;
-  height: 25px;
-  background: Teal;
-  position: relative;
-}
-
-.arrow-down.active {
-  background: steelblue;
-}
-
-.arrow-down:before, .arrow-down:after {
-  content: "";
-  display: block;
-  width: 10px;
-  height: 2.5px;
-  background: white;
-  position: absolute;
-  top: 10px;
-  transition: transform .5s;
-}
-
-.arrow-down:before {
-  right: 10.5px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  transform: rotate(45deg);
-}
-
-.arrow-down:after {
-  right: 5px;
-  transform: rotate(-45deg);
-}
-
-.arrow-down.active:before {
-  transform: rotate(-45deg);
-}
-
-.arrow-down.active:after {
-  transform: rotate(45deg);
-}*/
-
-/* END CUSTOM arrow toggle */
 

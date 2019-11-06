@@ -5,7 +5,7 @@ function update_control_values(lineid){
     age = vals[0];
     met = vals[1];
 
-    var met_text = "Metallicity [ log(Z / Zsolar) ]: ".concat(met.toFixed(2))
+    var met_text = "Metallicity: ".concat(met.toFixed(2))
     lin_age = Math.pow(10,age);
 
     // get precision, format accordingly
@@ -15,13 +15,15 @@ function update_control_values(lineid){
 
     var header_children = document.getElementById(lineid.concat('_header_button')).childNodes;
     var textnode = document.createTextNode(age_text);
-    header_children[0].replaceChild(textnode, header_children[0].childNodes[0]);
+
+    k = 1 // control which child node to amend
+    header_children[k].replaceChild(textnode, header_children[k].childNodes[0]);
     
     var textnode = document.createTextNode(met_text);
-    header_children[1].replaceChild(textnode, header_children[1].childNodes[0]);
+    header_children[k+1].replaceChild(textnode, header_children[k+1].childNodes[0]);
     
     var textnode = document.createTextNode(sps);
-    header_children[2].replaceChild(textnode, header_children[2].childNodes[0]);
+    header_children[k+2].replaceChild(textnode, header_children[k+2].childNodes[0]);
 }
 
 
@@ -62,33 +64,43 @@ function add_line_controls(lineid){
     //}
 
     // add horizontal line
-    //var hr = document.createElement('hr');
-    //div.appendChild(hr);
+    var hr = document.createElement('hr');
+    div.appendChild(hr);
     
     /* header row */
     var row_div = document.createElement("div");
     row_div.id = lineid.concat("_header_button");
     row_div.className="row header_button"
-    row_div.style.backgroundColor=color(Number(lineid.substr(9)));
     document.getElementById(lineid).appendChild(row_div);
 
+    /* coloured 'button' */
+    var col_div = document.createElement("div");
+    col_div.className="one column header_text";
+    col_div.style="height: 30px;width: 30px;border-radius: 50%;"
+    col_div.style.backgroundColor=color(Number(lineid.substr(9)));
+    row_div.appendChild(col_div);
+    
     /* header text */
     var col_div = document.createElement("div");
-    col_div.className="one-third column header_text";
-    col_div.id="age_text";
+    col_div.className="three columns header_text";
     col_div.append(document.createTextNode(""));
     row_div.appendChild(col_div);
 
     var col_div = document.createElement("div");
-    col_div.className="one-third column header_text";
-    col_div.id="met_text";
+    col_div.className="three columns header_text";
     col_div.append(document.createTextNode(""));
     row_div.appendChild(col_div);
     
     var col_div = document.createElement("div");
-    col_div.className="one-third column header_text";
-    col_div.id="met_text";
+    col_div.className="three columns header_text";
     col_div.append(document.createTextNode(""));
+    row_div.appendChild(col_div);
+    
+    /* button */
+    var col_div = document.createElement("div");
+    col_div.className="one column pm_button";
+    col_div.id=lineid.concat("_pm_button");
+    col_div.append(document.createTextNode("-"));
     row_div.appendChild(col_div);
     
     /* sliders row */
@@ -142,7 +154,6 @@ function add_line_controls(lineid){
     document.getElementById(lineid.concat("_sps_selector"))
         .addEventListener("change", function(){
             /* update sliders */
-
 
             main(lineid,false);
         });
@@ -235,6 +246,12 @@ function update_active_button(lineid,new_line) {
             lcs[l].classList.toggle('active');        
             // make it invisible
             toggle_visibility(lcs[l].id.concat("_param_slider"));
+
+            // change the pm button
+            var textnode = document.createTextNode("+");
+            node = document.getElementById(lcs[l].id.concat("_pm_button"))
+            node.replaceChild(textnode, node.childNodes[0]);
+
         }
     }
  
@@ -244,6 +261,17 @@ function update_active_button(lineid,new_line) {
     
     // make it visible
     toggle_visibility(lineid.concat("_param_slider"));
+    
+    // change the pm button
+    if (thisline.classList.contains('active')) {
+        var textnode = document.createTextNode("-");
+    }
+    else {
+        var textnode = document.createTextNode("+");
+    }
+    node = document.getElementById(lineid.concat("_pm_button"))
+    node.replaceChild(textnode, node.childNodes[0]);
+    
 }
 
 

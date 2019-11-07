@@ -1,11 +1,33 @@
 
+.sps_select {
+    margin-left: 2%;
+    margin-top: 2%;
+}
+
+hr {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  border-width: 0;
+  border-top: 1px solid #E1E1E1;
+}
+
+
+.colour_circle {
+    height: 30px;
+    width: 100%;
+    border-radius: 50%;
+}
+
 .pm_button {
     text-align:right;
-    font-size:20px;
+    font-size:50px;
+    font-weight:bold;
+    margin-right: 20px;
 }
 
 .header_text {
-    text-align:center;
+    text-align:left;
+    font-size: 20px;
 }
 
 #help_box {
@@ -52,11 +74,13 @@
 }
 
 .header_button {
-  height: auto;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
 }
 
 .header_button:hover {
-  filter: brightness(85%);
+    background-color: lightgrey;
 }
 
 

@@ -12,18 +12,14 @@ function update_control_values(lineid){
     if (lin_age >= 1.0){ var age_text = "Age (Gyr): ".concat(lin_age.toFixed(2)); }
     else if (lin_age >= 0.01) { var age_text = "Age (Myr): ".concat((lin_age * Math.pow(10,3)).toFixed(2)); }
     else { var age_text = "Age (yr): ".concat((lin_age * Math.pow(10,6)).toFixed(2)); }
+    var out_text = sps.concat(" | ",met_text," | ",age_text);
 
     var header_children = document.getElementById(lineid.concat('_header_button')).childNodes;
-    var textnode = document.createTextNode(age_text);
+    var textnode = document.createTextNode(out_text);
 
     k = 1 // control which child node to amend
     header_children[k].replaceChild(textnode, header_children[k].childNodes[0]);
     
-    var textnode = document.createTextNode(met_text);
-    header_children[k+1].replaceChild(textnode, header_children[k+1].childNodes[0]);
-    
-    var textnode = document.createTextNode(sps);
-    header_children[k+2].replaceChild(textnode, header_children[k+2].childNodes[0]);
 }
 
 
@@ -75,26 +71,26 @@ function add_line_controls(lineid){
 
     /* coloured 'button' */
     var col_div = document.createElement("div");
-    col_div.className="one column header_text";
+    col_div.className="one column colour_circle";
     col_div.style="height: 30px;width: 30px;border-radius: 50%;"
-    col_div.style.backgroundColor=color(Number(lineid.substr(9)));
+    col_div.style.border="3px solid ".concat(color(Number(lineid.substr(9))));
     row_div.appendChild(col_div);
     
     /* header text */
     var col_div = document.createElement("div");
-    col_div.className="three columns header_text";
+    col_div.className="ten columns header_text";
     col_div.append(document.createTextNode(""));
     row_div.appendChild(col_div);
 
-    var col_div = document.createElement("div");
-    col_div.className="three columns header_text";
-    col_div.append(document.createTextNode(""));
-    row_div.appendChild(col_div);
-    
-    var col_div = document.createElement("div");
-    col_div.className="three columns header_text";
-    col_div.append(document.createTextNode(""));
-    row_div.appendChild(col_div);
+    //var col_div = document.createElement("div");
+    //col_div.className="three columns header_text";
+    //col_div.append(document.createTextNode(""));
+    //row_div.appendChild(col_div);
+    //
+    //var col_div = document.createElement("div");
+    //col_div.className="four columns header_text";
+    //col_div.append(document.createTextNode(""));
+    //row_div.appendChild(col_div);
     
     /* button */
     var col_div = document.createElement("div");
@@ -122,6 +118,7 @@ function add_line_controls(lineid){
     col_div.appendChild(div);
     
     col_div.append(document.createTextNode("Age, log(Gyr)"));
+    col_div.style.textAlign = "center";
     row_div.appendChild(col_div);
     
     /* metallicity column */
@@ -137,11 +134,13 @@ function add_line_controls(lineid){
     col_div.appendChild(div);
     
     col_div.append(document.createTextNode("Metallicity, log(Z / Zsolar)"));
+    col_div.style.textAlign = "center";
     row_div.appendChild(col_div);
 
     /* sps selector */
     var dropdown = document.createElement("select");
-    dropdown.className="u-full-width";
+    //dropdown.className="u-full-width";
+    dropdown.className="six columns sps_select";
     dropdown.id = lineid.concat("_sps_selector");
     for (i=0; i<sps_models.length; i++) {
         var opt = document.createElement("option");

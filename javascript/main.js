@@ -100,7 +100,7 @@ async function main(lineid,first){
 
 
 /* SPS models */
-var sps_models = ['fsps','fsps_neb','bc03','bpass'];
+var sps_models = ['fsps','fsps_neb','bc03','bpass','bpass_sin'];
 
 // **** Add initial line
 linef = "test_data"

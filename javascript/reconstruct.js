@@ -5,8 +5,8 @@ function reconstruct(age,Z,ages,metallicities,coeffs,components,mean){
     interp_coeffs = new Array(n_coeffs)
     for (k=0; k<n_coeffs; k++){
         c_col = coeffs.map(x => x[k]);
-        //interp_coeffs[k] = nearest_grid_point(age,Z,ages,metallicities,c_col)
-        interp_coeffs[k] = interpolate_2d(age,Z,ages,metallicities,c_col)
+        //interp_coeffs[k] = nearest_grid_point(Z,age,metallicities,ages,c_col)
+        interp_coeffs[k] = interpolate_2d(Z,age,metallicities,ages,c_col)
     }
 
     dotp = math.multiply(interp_coeffs, components);
@@ -17,7 +17,7 @@ function reconstruct(age,Z,ages,metallicities,coeffs,components,mean){
 
 
 function fetch_coeff(x_idx,y_idx,y_len,z_arr){
-    return z_arr[x_idx + y_idx*y_len];
+    return z_arr[(x_idx*y_len) + y_idx];
 }
 
 
@@ -25,7 +25,8 @@ function nearest_grid_point(x,y,x_arr,y_arr,z_arr){
     x_idx = argMin(math.abs(math.subtract(x_arr, x)))
     y_idx = argMin(math.abs(math.subtract(y_arr, y)))
 
-    return fetch_coeff(x_idx,y_idx,y_arr.length,z_arr);
+    coeff = fetch_coeff(x_idx,y_idx,y_arr.length,z_arr);
+    return coeff
 }
 
 

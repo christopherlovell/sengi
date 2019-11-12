@@ -211,14 +211,10 @@ function init_param_slider(lineid,div){
 
 function update_param_slider(lineid,str,arr) {
 
-    console.log(arr);
-
     var slider = document.getElementById(lineid.concat(str))
     
     var min_x = Number(math.min(arr).toFixed(1));
     var max_x = Number(math.max(arr).toFixed(1));
-
-    console.log(min_x,max_x);
     
     slider.noUiSlider.updateOptions({
         range: {

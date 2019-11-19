@@ -28,7 +28,7 @@ def grid(Nage=80, NZ=20, nebular=True, dust=False):
     wl = np.array(sp.get_spectrum(tage=13, peraa=True)).T[:,0]
 
     ages = np.logspace(-2,np.log10(15),num=Nage,base=10)
-    metallicities = np.linspace(-2, 2, num=NZ) # log(Z / Zsol)
+    metallicities = np.linspace(-2, 1, num=NZ) # log(Z / Zsol)
 
     spec = np.zeros((len(metallicities), len(ages), len(wl)))
 
@@ -47,8 +47,8 @@ def grid(Nage=80, NZ=20, nebular=True, dust=False):
 
 if __name__ == "__main__":
 
-    Nage = 80
-    NZ = 40
+    Nage = 81
+    NZ = 41
 
     spec, ages, Z, wl = grid(nebular=False, dust=False, Nage=Nage, NZ=NZ)
 

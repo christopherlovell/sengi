@@ -14,9 +14,8 @@ models = glob(model_dir+'/*')
 output_temp = load.model_output(models[0])
 
 ages = np.array([float(a) for a in output_temp.columns[1:]])
-#age_mask = (10**ages / 1e9) < 18 # Gyr
-# age_mask = ages < 18 #Gyr
-#ages = ages[age_mask]
+age_mask = (10**ages / 1e9) < 18 # Gyr
+ages = ages[age_mask]
 
 wl = output_temp['WL'].values
 metallicities = np.array([None] * len(models))

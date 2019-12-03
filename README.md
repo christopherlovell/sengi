@@ -1,6 +1,7 @@
 # Sengi
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3554532.svg)](https://doi.org/10.5281/zenodo.3554532)
+[![arXiv](https://img.shields.io/badge/arXiv-11911.12713-red.svg)](https://arxiv.org/abs/1911.12713)
 
 A small, fast, interactive viewer for Stellar Population Synthesis (SPS) spectra, using Non-negative Matrix Factorisation (NMF) and bilinear interpolation for reconstruction.
 

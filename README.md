@@ -5,7 +5,7 @@
 
 A small, fast, interactive viewer for Stellar Population Synthesis (SPS) spectra, using Non-negative Matrix Factorisation (NMF) and bilinear interpolation for reconstruction.
 
-A live demo is available at [christopherlovell.github.io/sengi](christopherlovell.github.io/sengi)
+A live demo is available at [https://christopherlovell.github.io/sengi](christopherlovell.github.io/sengi)
 
 ![Sengi](https://www.christopherlovell.co.uk/sengi/images/sengi.jpg)
 

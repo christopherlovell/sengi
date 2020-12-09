@@ -44,18 +44,12 @@ var color = d3.scaleOrdinal(d3.schemeCategory10);
 var duration = 1000;
 
 
-async function main(lineid,first){
+async function main(lineid){
 
     sps = get_sps(lineid);
     
     load_data(sps)
         .then((dict) => {
-
-            // if this is the first time the line is created, make some sliders
-            //if (first){
-            //    init_param_slider(lineid,"_age_slider",dict["ages"]);
-            //    init_param_slider(lineid,"_Z_slider",dict["metallicities"]);
-            //}
                
             update_param_slider(lineid,"_age_slider",dict["ages"]);
             update_param_slider(lineid,"_Z_slider",dict["metallicities"]);
@@ -68,6 +62,17 @@ async function main(lineid,first){
                            dict["coeffs"],dict["components"],dict["mean"]);
 
             dat = d3_data_transform(dict["wavelength"],spec);
+
+            // create download object
+            var download = document.getElementById(lineid.concat('_download_spec'))
+            let blob_spec = new Blob([spec], { type: 'plain/text', endings: 'native'})
+            let objectURL_spec = URL.createObjectURL(blob_spec)
+            download.setAttribute('href',objectURL_spec)
+            
+            var download = document.getElementById(lineid.concat('_download_wave'))
+            let blob_wave = new Blob([dict["wavelength"]], { type: 'plain/text', endings: 'native'})
+            let objectURL_wave = URL.createObjectURL(blob_wave)
+            download.setAttribute('href',objectURL_wave)
             
             // save the newly created (refreshed) line
             sessionStorage.setObj(lineid,dat);
@@ -108,11 +113,11 @@ first_line = true
 lid = 0;
 add_line_controls(linef.concat(lid));
 
-main(linef.concat(lid),true);
+main(linef.concat(lid));
 
 document.getElementById('add_line').addEventListener("click", function() {
                                                               lid += 1;
                                                               add_line_controls(linef.concat(lid));
-                                                              main(linef.concat(lid),true);
+                                                              main(linef.concat(lid));
                                                             });
 

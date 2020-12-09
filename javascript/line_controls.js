@@ -136,8 +136,14 @@ function add_line_controls(lineid){
     col_div.append(document.createTextNode("Metallicity, log(Z / Zsolar)"));
     col_div.style.textAlign = "center";
     row_div.appendChild(col_div);
+    document.getElementById(lineid).appendChild(row_div);
 
     /* sps selector */
+    var row_div = document.createElement("div");
+    row_div.className="row sliders";
+    row_div.id = lineid.concat('_sps_download');
+    document.getElementById(lineid).appendChild(row_div);
+
     var dropdown = document.createElement("select");
     //dropdown.className="u-full-width";
     dropdown.className="six columns sps_select";
@@ -164,7 +170,29 @@ function add_line_controls(lineid){
         .addEventListener("click", function(){
             update_active_button(lineid,false);
         });
+
+    /* download link */
+    var col_div = document.createElement("div"); 
+    col_div.append(document.createTextNode("Download:"));
+    col_div.className="two columns download_text"
+    row_div.appendChild(col_div);
+
+    
+    var download = document.createElement('a');
+    var linkText = document.createTextNode("Spectrum");
+    download.appendChild(linkText);
+    download.className="two columns download_text";
+    download.id = lineid.concat("_download_spec");
+    row_div.appendChild(download);
+    
+    var download = document.createElement('a');
+    var linkText = document.createTextNode("Wavelength");
+    download.appendChild(linkText);
+    download.className="two columns download_text";
+    download.id = lineid.concat("_download_wave");
+    row_div.appendChild(download);
 }
+
 
 function init_param_slider(lineid,div){
 
@@ -241,6 +269,7 @@ function update_active_button(lineid,new_line) {
             lcs[l].classList.toggle('active');        
             // make it invisible
             toggle_visibility(lcs[l].id.concat("_param_slider"));
+            toggle_visibility(lcs[l].id.concat("_sps_download"));
 
             // change the pm button
             var textnode = document.createTextNode("+");
@@ -256,6 +285,7 @@ function update_active_button(lineid,new_line) {
     
     // make it visible
     toggle_visibility(lineid.concat("_param_slider"));
+    toggle_visibility(lineid.concat("_sps_download"));
     
     // change the pm button
     if (thisline.classList.contains('active')) {

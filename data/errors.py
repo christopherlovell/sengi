@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.decomposition import PCA, NMF
+# from sklearn.decomposition import PCA, NMF
 from grids.h5py_utils import load_h5py
 
 import matplotlib.pyplot as plt
@@ -9,7 +9,7 @@ from mpl_toolkits.axes_grid1.inset_locator import (inset_axes, InsetPosition,
 import matplotlib.gridspec as gridspec
 
 
-name = 'bc03'
+name = 'fsps'
 method='nmf'
 
 # original spectra
@@ -30,7 +30,6 @@ components = np.loadtxt('%s/components.txt'%name)
 coeffs = np.loadtxt('%s/coeffs.txt'%name)
 
 print(ages)
-print(np.log10(ages))
 
 shape = len(Z) * len(ages)
 resolution = len(wl)
@@ -45,58 +44,58 @@ estimated_spectra = estimated_spectra.reshape(len(Z),
 
 err = 2 * np.abs(estimated_spectra - spec) / (spec + estimated_spectra)
 
-# print(Z.shape, ages.shape)
-# i,j = np.unravel_index(np.argmax(np.mean(err, axis=2)), (len(Z), len(ages)))
-# print("Maximum Error\n-------------\nerror: %.2f\nmetallicity: [%i] %.2f\nage: [%i] %.2f\n"%(np.mean(err,axis=2).max(),i, Z[i], j, ages[j]))
+print(Z.shape, ages.shape)
+i,j = np.unravel_index(np.argmax(np.mean(err, axis=2)), (len(Z), len(ages)))
+print("Maximum Error\n-------------\nerror: %.2f\nmetallicity: [%i] %.2f\nage: [%i] %.2f\n"%(np.mean(err,axis=2).max(),i, Z[i], j, ages[j]))
  
-# i = 2
-# j = 40
-# 
-# 
-# fig = plt.figure(figsize=(5,8))
-# 
-# gs = gridspec.GridSpec(2,1)
-# gs.update(wspace=0., hspace=0.)
-# ax1 = plt.subplot(gs[0])
-# ax2 = plt.subplot(gs[1])
-# 
-# ax1.semilogx(wl, spec[i,j], label='True', alpha=0.6)
-# ax1.semilogx(wl, estimated_spectra[i,j], label='Predicted', alpha=0.6)
-# ax1.legend()
-# ax1.set_ylabel('$L_{\odot} \,/\, \mathrm{\AA}$', size=15)
-# ax1.set_xticks([])
-# 
-# ax1.text(0.05,0.9,'Metallicity ($\mathrm{log_{10}}(Z/Z_{\odot})$: %.2f'%Z[i],transform=ax1.transAxes)
-# ax1.text(0.05,0.82,'Age (Gyr): %.2f'%10**ages[j],transform=ax1.transAxes)
-# ax1.text(0.05,0.74,r'$\left| R_{\mathrm{SMAPE}} \right| = %.3f$'%np.mean(err[i,j]),transform=ax1.transAxes)
-# 
-# 
-# ax2.semilogx(wl, err[i,j,:], color='red', linewidth=0.1)
-# ax2.hlines([0.05,0.1,0.2],wl.min(),wl.max(),linestyle='dashed',alpha=0.5)
-# ax2.set_xlabel('$\lambda \,/\, \AA$', size=15)
-# ax2.set_ylabel('$R_\mathrm{SMAPE}}$', size=15)
-# ax2.set_ylim(0,1)
-# 
-# ax3 = plt.axes([0,0,1,1])
-# ip = InsetPosition(ax1, [0.45,-0.45,0.5,0.5])
-# ax3.set_axes_locator(ip)
-# mark_inset(ax1, ax3, loc1=3, loc2=1, fc="none", ec='0.5')
-# 
-# k,l = 800,900
-# ax3.semilogx(wl[k:l], spec[i,j,k:l], label='true', alpha=0.6)
-# ax3.semilogx(wl[k:l], estimated_spectra[i,j,k:l], label='recon', alpha=0.6)
-# ax3.set_ylabel('$L_{\odot} \,/\, \mathrm{\AA}$', size=15)
-# 
-# ax1.ticklabel_format(style='sci', axis='y', scilimits=(0,0)) 
-# ax3.ticklabel_format(style='sci', axis='y', scilimits=(0,0)) 
-# 
-# for ax in [ax1,ax2]:
-#     ax.set_xlim(wl.min(),wl.max())
-# 
-# for ax in [ax1,ax3]: ax.set_ylim(0,)
-# 
-# plt.show()
-# #fig.savefig('plots/errs_example_%s.png'%method,dpi=200,bbox_inches='tight')
+i = 12
+j = 76
+
+
+fig = plt.figure(figsize=(10,8))
+
+gs = gridspec.GridSpec(2,1)
+gs.update(wspace=0., hspace=0.)
+ax1 = plt.subplot(gs[0])
+ax2 = plt.subplot(gs[1])
+
+ax1.semilogx(wl, spec[i,j], label='True', alpha=0.6,lw=0.5)
+ax1.semilogx(wl, estimated_spectra[i,j], label='Predicted', alpha=0.6,lw=0.5)
+ax1.legend()
+ax1.set_ylabel('$L_{\odot} \,/\, \mathrm{\AA}$', size=15)
+ax1.set_xticklabels([])
+
+ax1.text(0.02,0.7,'Metallicity ($\mathrm{log_{10}}(Z/Z_{\odot})$: %.2f'%Z[i],transform=ax1.transAxes)
+ax1.text(0.02,0.62,'Age (Gyr): %.2f'%10**ages[j],transform=ax1.transAxes)
+ax1.text(0.02,0.54,r'$P_{50}(R) = %.3f$'%np.mean(err[i,j]),transform=ax1.transAxes)
+
+
+ax2.semilogx(wl, err[i,j,:], color='red', linewidth=0.1)
+ax2.hlines([0.05,0.1,0.2],wl.min(),wl.max(),linestyle='dashed',alpha=0.5)
+ax2.set_xlabel('$\lambda \,/\, \AA$', size=15)
+ax2.set_ylabel('$R$', size=15)
+ax2.set_ylim(0,0.49)
+
+ax3 = plt.axes([0,0,1,1])
+ip = InsetPosition(ax1, [0.5,-0.46,0.5,0.5])
+ax3.set_axes_locator(ip)
+mark_inset(ax1, ax3, loc1=3, loc2=1, fc="none", ec='0.5')
+
+k,l = 1400,1600
+ax3.semilogx(wl[k:l], spec[i,j,k:l], label='true', alpha=0.6)
+ax3.semilogx(wl[k:l], estimated_spectra[i,j,k:l], label='recon', alpha=0.6)
+ax3.set_ylabel('$L_{\odot} \,/\, \mathrm{\AA}$', size=15)
+
+ax1.ticklabel_format(style='sci', axis='y', scilimits=(0,0)) 
+ax3.ticklabel_format(style='sci', axis='y', scilimits=(0,0)) 
+
+for ax in [ax1,ax2]:
+    ax.set_xlim(wl.min(),wl.max())
+
+for ax in [ax1,ax3]: ax.set_ylim(0,)
+
+plt.show()
+#fig.savefig('plots/errs_example_%s.png'%method, dpi=300, bbox_inches='tight')
 
 
 
@@ -104,33 +103,33 @@ err = 2 * np.abs(estimated_spectra - spec) / (spec + estimated_spectra)
 
 fig, (ax1) = plt.subplots(1,1, figsize=(5,5))
 
-im = ax1.imshow(np.mean(err,axis=2).T, aspect='auto',interpolation='none',
-                extent=(0,len(Z),0,len(ages)))
+im = ax1.imshow(np.median(err,axis=2).T, aspect='auto',interpolation='none',vmin=0)
 
-mult=6
-amin=int((len(ages)-1) % mult / 2) + 0.5
-amax=amin+ mult*int((len(ages)-1) / mult)
-ticks = np.linspace(amin,amax,mult)
-ax1.set_yticks(ticks)
-ax1.set_yticklabels(["%.3f"%(10**a) for a in ages[ticks.astype(int)]],rotation='vertical')
+# xidxs = [0,3,6,9,12] 
+xidxs = [0,10,20,30,39]
+ax1.set_xticks(xidxs)
+print(Z[xidxs])
+ax1.set_xticklabels(Z[xidxs].round(2))
 
-mult=6
-amin=int((len(Z)-1) % mult / 2) + 0.5
-amax=amin+ mult*int((len(Z)-1) / mult)
-ticks = np.linspace(amin,amax,mult)
-ax1.set_xticks(ticks)
-ax1.set_xticklabels(["%.2f"%z for z in Z[ticks.astype(int)]],rotation='horizontal')
+# yidxs = [0,10,20,30,42] 
+yidxs = [0,20,40,60,78]
+ax1.set_yticks(yidxs)
+print(10**ages[yidxs])
+ax1.set_yticklabels(['1 Myr','62 Myr','387 Myr','1.42 Gyr','12.5 Gyr'])
+# ax1.set_yticklabels(['1 Myr','10 Myr','100 Myr','1 Gyr','15.8 Gyr'])
+
 
 divider = make_axes_locatable(ax1)
 cax = divider.append_axes('right', size='5%', pad=0.05)
 cbar = fig.colorbar(im, cax=cax)#, orientation='horizontal')
-cbar.ax.set_ylabel('$R_{\mathrm{SMAPE}}$', rotation=270, labelpad=18, size=15)
+cbar.ax.set_ylabel('$P_{50} (R_{i,\lambda_{\mathrm{min}}...\lambda_{\mathrm{max}}})$', 
+                   rotation=270, labelpad=18, size=15)
 
-ax1.set_ylabel('Age (Gyr)', size=15,labelpad=15)
+ax1.set_ylabel('Age', size=15, labelpad=15)
 ax1.set_xlabel('Metallicity [$\mathrm{log_{10}(Z \,/\, Z_{\odot})}$]', size=15, labelpad=15)
 
-#plt.show()
-fig.savefig('plots/errmat_%s.png'%method,dpi=200,bbox_inches='tight')
+plt.show()
+#fig.savefig('plots/errmat_%s_%s.png'%(method,name), dpi=300, bbox_inches='tight')
 
 
 

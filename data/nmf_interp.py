@@ -9,7 +9,6 @@ from mpl_toolkits.axes_grid1.inset_locator import (inset_axes, InsetPosition,
 import matplotlib.gridspec as gridspec
 
 
-
 def reconstruct(age,met,ages,metallicities,coeffs,components):
     n_coeffs = coeffs.shape[2]
 
@@ -46,40 +45,53 @@ def interpolate_2d(x,y,x_arr,y_arr,z_arr):
     return y_dist*c_y_lo + (1-y_dist)*c_y_hi
 
 
-
 name = 'fsps'
-
 fname = 'grids/%s.h5'%name
 spec = load_h5py(fname,'spec')
 ages = load_h5py(fname,'ages')
 Z = load_h5py(fname,'metallicities')
 wl = load_h5py(fname,'wavelength')
+mean = np.loadtxt('%s/mean.txt'%name)
+components = np.loadtxt('%s/components.txt'%name)
+coeffs = np.loadtxt('%s/coeffs.txt'%name)
 
 ages = np.log10(ages)
 
 wl_mask = (wl > 2e3) & (wl < 1e4)
 wl = wl[wl_mask]
 resolution = np.sum(wl_mask)
-comps = 20
-shape = len(Z[::2]) * len(ages[::2])
+## comps = 20
+# shape = len(Z[::2]) * len(ages[::2])
 
-spec_fit = spec[::2,::2,wl_mask].reshape((shape,resolution))
-
-nmf = NMF(n_components=comps, init='nndsvdar', max_iter=int(5e3),
-          solver='mu', beta_loss='itakura-saito', verbose=True, tol=1e-5)
-
-coeffs = nmf.fit_transform(spec_fit)
-components = nmf.components_
-
-coeffs = coeffs.reshape(len(Z[::2]),len(ages[::2]),20)
-recon_spec = np.zeros((len(Z[1::2]),len(ages[1::2]),resolution))
-
-for i,met in enumerate(Z[1::2]):
-    for j,a in enumerate(ages[1::2]):
-        recon_spec[i,j] = reconstruct(a,met,ages[::2],Z[::2],coeffs,components)
+# spec_fit = spec[::2,::2,wl_mask].reshape((shape,resolution))
+# 
+# nmf = NMF(n_components=comps, init='nndsvdar', max_iter=int(1e4),
+#           solver='mu', beta_loss='itakura-saito', verbose=True, tol=1e-6)
+# 
+# coeffs = nmf.fit_transform(spec_fit)
+# components = nmf.components_
 
 
-true_spec = spec[1::2,1::2,wl_mask]
+name = 'fsps_hires'
+fname = 'grids/%s.h5'%name
+spec_hires = load_h5py(fname,'spec')
+ages_hires = np.log10(load_h5py(fname,'ages'))
+Z_hires = load_h5py(fname,'metallicities')
+# wl = load_h5py(fname,'wavelength')
+# mean = np.loadtxt('%s/mean.txt'%name)
+# components = np.loadtxt('%s/components.txt'%name)
+# coeffs = np.loadtxt('%s/coeffs.txt'%name)
+# ages = np.log10(ages)
+
+coeffs = coeffs.reshape(len(Z),len(ages),20)
+recon_spec = np.zeros((len(Z)-1,len(ages)-1,resolution))
+
+for i,met in enumerate(Z_hires[1::2]):
+    for j,a in enumerate(ages_hires[1::2]):
+        recon_spec[i,j] = reconstruct(a,met,ages,Z,coeffs,components)
+
+
+true_spec = spec_hires[1::2,1::2,wl_mask]
 
 err = 2 * np.abs(recon_spec - true_spec) / \
         (true_spec + recon_spec)
@@ -90,36 +102,31 @@ err = 2 * np.abs(recon_spec - true_spec) / \
 
 fig, (ax1) = plt.subplots(1,1, figsize=(5,5))
 
-im = ax1.imshow(np.mean(err,axis=2).T, aspect='auto',interpolation='none',
-        extent=(0,len(Z[1::2]),0,len(ages[1::2])),vmin=0.)
+im = ax1.imshow(np.median(err,axis=2).T, aspect='auto',interpolation='none',vmin=0.)
+#        extent=(0,len(Z[1::2]),0,len(ages[1::2])))
 
-mult=6
-amin=int((len(ages[1::2])-1) % mult / 2) + 0.5
-amax=amin+ mult*int((len(ages[1::2])-1) / mult)
-ticks = np.linspace(amin,amax,mult+1)
-ax1.set_yticks(ticks)
-ax1.set_yticklabels(["%.3f"%(10**a) for a in \
-        ages[1::2][ticks.astype(int)]],rotation='vertical')
+xidxs = [0,10,20,30,39]
+ax1.set_xticks(xidxs)
+print(Z[xidxs])
+ax1.set_xticklabels(Z[xidxs].round(2))
 
-
-mult=6
-amin=int((len(Z[1::2])-1) % mult / 2) + 0.5
-amax=amin+ mult*int((len(Z[1::2])-1) / mult)
-ticks = np.linspace(amin,amax,mult)
-ax1.set_xticks(ticks)
-ax1.set_xticklabels(["%.2f"%z for z in \
-        Z[1::2][ticks.astype(int)]],rotation='horizontal')
+yidxs = [0,20,40,60,78]
+ax1.set_yticks(yidxs)
+print(10**ages[yidxs])
+ax1.set_yticklabels(['1 Myr','62 Myr','387 Myr','1.42 Gyr','12.5 Gyr'])
+# ax1.set_yticklabels(['1 Myr','10 Myr','100 Myr','1 Gyr','15.8 Gyr'])
 
 divider = make_axes_locatable(ax1)
 cax = divider.append_axes('right', size='5%', pad=0.05)
 cbar = fig.colorbar(im, cax=cax)#, orientation='horizontal')
-cbar.ax.set_ylabel('$R_{\mathrm{SMAPE}}$', rotation=270, labelpad=18, size=15)
+cbar.ax.set_ylabel('$P_{50} (R_{i,\lambda_{\mathrm{min}}...\lambda_{\mathrm{max}}})$', 
+                   rotation=270, labelpad=18, size=15)
 
-ax1.set_ylabel('Age (Gyr)', size=15,labelpad=15)
+ax1.set_ylabel('Age', size=15,labelpad=15)
 ax1.set_xlabel('Metallicity [$\mathrm{log_{10}(Z \,/\, Z_{\odot})}$]', size=15, labelpad=15)
 
 plt.show()
-fig.savefig('plots/interp_errmat.png',dpi=200,bbox_inches='tight')
+# fig.savefig('plots/interp_errmat.png',dpi=300,bbox_inches='tight')
 
 
 print("Mean error:",np.mean(err))

@@ -22,7 +22,7 @@ def grid(Nage=80, NZ=20, nebular=True, dust=False):
                                     dust1=0.0) # dust_type=1, dust2=0.2, dust1=0.2)
     else:
         sp = fsps.StellarPopulation(zcontinuous=1, sfh=0, cloudy_dust=True,
-                                    add_neb_emission=nebular)
+                                    add_neb_emission=nebular, logzsol=0.0)
 
 
     wl = np.array(sp.get_spectrum(tage=13, peraa=True)).T[:,0]
@@ -58,10 +58,10 @@ if __name__ == "__main__":
     write_data_h5py(fname,'metallicities',data=Z,overwrite=True)
     write_data_h5py(fname,'wavelength',data=wl,overwrite=True)
 
-    spec, ages, Z, wl = grid(nebular=True, dust=False, Nage=Nage, NZ=NZ)
+    # spec, ages, Z, wl = grid(nebular=True, dust=False, Nage=Nage, NZ=NZ)
 
-    fname = 'fsps_neb.h5'
-    write_data_h5py(fname,'spec',data=spec,overwrite=True)
-    write_data_h5py(fname,'ages',data=ages,overwrite=True)
-    write_data_h5py(fname,'metallicities',data=Z,overwrite=True)
-    write_data_h5py(fname,'wavelength',data=wl,overwrite=True)
+    # fname = 'fsps_neb.h5'
+    # write_data_h5py(fname,'spec',data=spec,overwrite=True)
+    # write_data_h5py(fname,'ages',data=ages,overwrite=True)
+    # write_data_h5py(fname,'metallicities',data=Z,overwrite=True)
+    # write_data_h5py(fname,'wavelength',data=wl,overwrite=True)

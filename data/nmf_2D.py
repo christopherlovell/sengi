@@ -18,8 +18,8 @@ shape = len(Z) * len(ages)
 
 spec_fit = spec[:,:,wl_mask].reshape((shape,resolution))
 
-nmf = NMF(n_components=comps, init='nndsvdar', max_iter=int(5e3), 
-          solver='mu', beta_loss='itakura-saito', verbose=True, tol=1e-5)
+nmf = NMF(n_components=comps, init='nndsvdar', max_iter=int(1e5), 
+          solver='mu', beta_loss='itakura-saito', verbose=True, tol=1e-6)
 
 coeffs = nmf.fit_transform(spec_fit)
 

@@ -3,6 +3,8 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3554532.svg)](https://doi.org/10.5281/zenodo.3554532)
 [![arXiv](https://img.shields.io/badge/arXiv-11911.12713-red.svg)](https://arxiv.org/abs/1911.12713)
 
+[(*Published paper*)](https://www.sciencedirect.com/science/article/pii/S2213133720300986)
+
 A small, fast, interactive viewer for Stellar Population Synthesis (SPS) spectra, using Non-negative Matrix Factorisation (NMF) and bilinear interpolation for reconstruction.
 
 A live demo is available at [christopherlovell.github.io/sengi](https://christopherlovell.github.io/sengi)
@@ -23,26 +25,17 @@ A full description of each of the SPS models used is provided [here](https://www
 
 ## Citation
 
-If you find Sengi useful in your project please cite the following [paper](https://arxiv.org/abs/1911.12713):
+If you find Sengi useful in your project please cite the following [paper](https://www.sciencedirect.com/science/article/pii/S2213133720300986):
 
-    @ARTICLE{2019arXiv191112713L,
-           author = {{Lovell}, Christopher C.},
-            title = "{Sengi: a small, fast, interactive viewer 
-                      for spectral outputs from stellar 
-                      population synthesis models}",
-          journal = {arXiv e-prints},
-         keywords = {Astrophysics - Instrumentation and 
-                     Methods for Astrophysics, Astrophysics 
-                     - Astrophysics of Galaxies},
-             year = "2019",
-            month = "Nov",
-              eid = {arXiv:1911.12713},
-            pages = {arXiv:1911.12713},
-    archivePrefix = {arXiv},
-           eprint = {1911.12713},
-     primaryClass = {astro-ph.IM},
-           adsurl = {https://ui.adsabs.harvard.edu/abs/2019arXiv191112713L},
-          adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+    @article{LOVELL2021100444,
+    title = "Sengi: A small, fast, interactive viewer for spectral outputs from stellar population synthesis models",
+    journal = "Astronomy and Computing",
+    volume = "34",
+    pages = "100444",
+    year = "2021",
+    issn = "2213-1337",
+    doi = "https://doi.org/10.1016/j.ascom.2020.100444",
+    url = "http://www.sciencedirect.com/science/article/pii/S2213133720300986",
+    author = "C.C. Lovell"    
     }
-
 
